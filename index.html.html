@@ -1,0 +1,2691 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Manna v11</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;1,400;1,600&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+[data-theme="light"]{--bg:#EEF2FA;--surface:#FFF;--border:rgba(27,58,107,.08);--text:#1B3A6B;--text-soft:#6B82A8;--text-faint:#C8D5E8;--shadow:rgba(27,58,107,.12);--nav:#FFF;--card:#FFF;--toolbar:#F4F6FB;--bible-bg:#0F1C2E;--bible-surface:#1A2845;--bible-border:rgba(255,255,255,.06)}
+[data-theme="dark"]{--bg:#0A1220;--surface:#1A2540;--border:rgba(255,255,255,.07);--text:#E8EEF8;--text-soft:#7A9ACC;--text-faint:#2A3A5A;--shadow:rgba(0,0,0,.35);--nav:#131D30;--card:#1A2540;--toolbar:#0E1624;--bible-bg:#080E18;--bible-surface:#0F1C2E;--bible-border:rgba(255,255,255,.06)}
+:root{--royal:#1B3A6B;--royal-mid:#2A52A0;--gold:#D4B45A;--gold-light:#EDD07A;--cyan:#2EC4B6}
+
+html,body{width:100%;height:100%;background:#060E1C;display:flex;justify-content:center;align-items:center;font-family:'Nunito',sans-serif;overflow:hidden}
+.phone-wrapper{height:min(96vh,800px);width:min(calc(min(96vh,800px)*9/19.5),370px);position:relative;flex-shrink:0}
+.iphone{width:100%;height:100%;background:#111;border-radius:44px;padding:10px;box-shadow:0 0 0 1px #3A3A3C,0 0 0 2.5px #1C1C1E,0 40px 80px rgba(0,0,0,.8);position:relative}
+.iphone::before{content:'';position:absolute;left:-2.5px;top:110px;width:2.5px;height:28px;background:#3A3A3C;border-radius:2px 0 0 2px;box-shadow:0 38px 0 #3A3A3C,0 76px 0 #3A3A3C}
+.iphone::after{content:'';position:absolute;right:-2.5px;top:135px;width:2.5px;height:58px;background:#3A3A3C;border-radius:0 2px 2px 0}
+.screen{width:100%;height:100%;background:var(--bg);border-radius:36px;overflow:hidden;display:flex;flex-direction:column;position:relative;transition:background .3s}
+.island{position:absolute;top:10px;left:50%;transform:translateX(-50%);width:96px;height:26px;background:#000;border-radius:16px;z-index:200;pointer-events:none}
+.view{position:absolute;inset:0;display:flex;flex-direction:column;border-radius:36px;overflow:hidden;background:var(--bg);transition:transform .36s cubic-bezier(.4,0,.2,1),opacity .36s ease;will-change:transform,opacity}
+.view.hidden{transform:translateX(100%);opacity:0;pointer-events:none}
+.view.slide-out{transform:translateX(-28%);opacity:0;pointer-events:none}
+.status-bar{display:flex;justify-content:space-between;align-items:center;padding:12px 18px 4px;flex-shrink:0;z-index:10}
+.s-time{font-size:13px;font-weight:800;color:white}
+.bottom-nav{background:var(--nav);padding:8px 12px 16px;display:flex;align-items:flex-end;justify-content:space-around;border-top:1px solid var(--border);border-radius:0 0 36px 36px;flex-shrink:0;z-index:50;transition:background .3s}
+.ni{display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;min-width:44px}
+.ni svg{width:21px;height:21px;stroke:var(--text-faint);stroke-width:1.9;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.ni.active svg{stroke:var(--gold)}
+.ni-lbl{font-size:8px;font-weight:700;color:var(--text-faint);text-align:center}
+.ni.active .ni-lbl{color:var(--royal-mid)}
+[data-theme="dark"] .ni.active .ni-lbl{color:var(--gold-light)}
+.fab-c{display:flex;flex-direction:column;align-items:center}
+.fab{width:46px;height:46px;border-radius:50%;background:var(--nav);border:1.5px solid var(--border);box-shadow:0 4px 14px var(--shadow);display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--royal);margin-bottom:2px;transition:background .3s}
+[data-theme="dark"] .fab{color:var(--gold-light)}
+.back-btn{width:28px;height:28px;background:rgba(255,255,255,.15);border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0}
+.back-btn svg{width:15px;height:15px;stroke:white;stroke-width:2.5;fill:none;stroke-linecap:round;stroke-linejoin:round}
+
+/* ══════════ ACCUEIL ══════════ */
+#view-home .status-bar{background:var(--royal-mid)}
+.home-hero{background:linear-gradient(160deg,var(--royal-mid) 0%,var(--royal) 100%);padding:6px 18px 18px;flex-shrink:0;position:relative;border-radius:0 0 26px 26px}
+.welcome-label{font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
+.welcome-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:white;line-height:1.1;margin-bottom:12px}
+.dark-toggle{width:32px;height:32px;background:rgba(255,255,255,.13);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;cursor:pointer;border:1.5px solid rgba(212,180,90,.35)}
+.revision-block{background:var(--surface);border-radius:16px;padding:12px 14px;box-shadow:0 8px 24px rgba(0,0,0,.15);transition:background .3s}
+.rev-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.rev-lbl{font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--text-soft)}
+.rev-counter{font-size:9px;font-weight:700;background:var(--bg);color:var(--text-soft);padding:3px 8px;border-radius:20px}
+.rev-carousel{overflow:hidden}
+.rev-track{display:flex;transition:transform .35s cubic-bezier(.4,0,.2,1)}
+.rev-slide{min-width:100%;padding:0 2px}
+.rev-verse{font-size:13px;font-weight:900;color:var(--royal);line-height:1.35;margin-bottom:4px}
+[data-theme="dark"] .rev-verse{color:var(--gold-light)}
+.rev-ref{font-size:10px;font-weight:700;color:var(--gold)}
+.rev-tag{display:inline-flex;font-size:8px;font-weight:800;background:rgba(27,58,107,.08);color:var(--royal-mid);border-radius:20px;padding:2px 8px;margin-top:4px}
+.rev-controls{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+.rev-dots{display:flex;gap:4px}
+.rev-dot{width:5px;height:5px;border-radius:50%;background:var(--text-faint);transition:background .2s,width .2s}
+.rev-dot.active{background:var(--gold);width:12px;border-radius:3px}
+.rev-arrows{display:flex;gap:5px}
+.rev-arrow{width:24px;height:24px;border-radius:8px;background:var(--bg);display:flex;align-items:center;justify-content:center;cursor:pointer;border:1px solid var(--border)}
+.rev-arrow svg{width:12px;height:12px;stroke:var(--text-soft);stroke-width:2.5;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.home-body{flex:1;overflow-y:auto;padding:12px 14px 8px;-webkit-overflow-scrolling:touch}
+.home-body::-webkit-scrollbar{display:none}
+.icon-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px 6px;margin-bottom:12px}
+.icon-item{display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer}
+.icon-item:active .icon-svg-box{transform:scale(.92)}
+.icon-svg-box{width:52px;height:52px;border-radius:15px;background:var(--card);box-shadow:0 2px 10px var(--shadow);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;transition:transform .15s,background .3s}
+.icon-svg-box svg{width:28px;height:28px}
+.icon-lbl{font-size:8.5px;font-weight:700;color:var(--text);text-align:center;line-height:1.2}
+.promo-banner{background:linear-gradient(135deg,var(--royal),var(--royal-mid));border-radius:14px;padding:13px 15px;position:relative;overflow:hidden}
+.promo-banner::after{content:'✦';position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:26px;color:rgba(212,180,90,.2)}
+.promo-title{font-size:13px;font-weight:800;color:white;margin-bottom:2px}
+.promo-sub{font-size:10px;color:rgba(255,255,255,.7)}
+
+/* ══════════════════════════════════
+   BIBLE — EXACT STRONG STYLE
+══════════════════════════════════ */
+#view-bible{background:var(--bible-bg)}
+#view-bible .status-bar{background:var(--bible-bg);padding:10px 14px 4px}
+#view-bible .status-bar .s-time{font-size:12px;color:rgba(255,255,255,.75)}
+
+/* Header — compact like Strong */
+.bible-hdr{
+  background:var(--bible-bg);
+  padding:4px 14px 6px;
+  display:flex;align-items:center;gap:7px;
+  border-bottom:1px solid var(--bible-border);
+  flex-shrink:0;
+}
+/* Book+chapter pill */
+.bh-book-pill{
+  display:flex;align-items:center;
+  background:rgba(255,255,255,.1);
+  border-radius:20px;padding:4px 10px 4px 12px;
+  cursor:pointer;flex-shrink:0;
+  transition:background .15s;
+  border:1px solid rgba(255,255,255,.12);
+}
+.bh-book-pill:active{background:rgba(255,255,255,.18)}
+.bh-book-text{font-family:'Lato',sans-serif;font-size:12px;font-weight:700;color:white}
+/* Version pill */
+.bh-ver-pill{
+  display:flex;align-items:center;
+  background:rgba(255,255,255,.1);
+  border-radius:20px;padding:4px 10px;
+  cursor:pointer;flex-shrink:0;
+  transition:background .15s;
+  border:1px solid rgba(255,255,255,.12);
+}
+.bh-ver-pill:active{background:rgba(255,255,255,.18)}
+.bh-ver-text{font-family:'Lato',sans-serif;font-size:11px;font-weight:700;color:white}
+/* Double chevron button */
+.bh-chev-btn{
+  width:28px;height:28px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:rgba(255,255,255,.45);font-size:14px;
+}
+/* More */
+.bh-more{
+  margin-left:auto;
+  width:26px;height:26px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  cursor:pointer;
+}
+.bh-more-dot{width:3px;height:3px;border-radius:50%;background:rgba(255,255,255,.5)}
+
+/* Reading area */
+.bible-reading{flex:1;overflow-y:auto;padding:10px 18px 0;-webkit-overflow-scrolling:touch;position:relative}
+.bible-reading::-webkit-scrollbar{display:none}
+/* Font: Lato, réduit à ~60% du 13px précédent → ~8px. On met 9px pour lisibilité */
+.bible-passage{
+  font-family:'Lato',sans-serif;
+  font-size:11px;
+  font-weight:300;
+  color:rgba(255,255,255,.88);
+  line-height:1.95;
+  text-align:left;
+  letter-spacing:.01em;
+}
+.vnum{
+  font-size:6.5px;font-weight:700;
+  color:rgba(255,255,255,.35);
+  vertical-align:super;margin-right:1px;
+  cursor:pointer;line-height:1;
+}
+.v-text{cursor:pointer;border-radius:2px;padding:0 1px;transition:background .15s}
+.v-text.hl-yellow{background:rgba(255,220,50,.28)}
+.v-text.hl-green{background:rgba(46,196,150,.22)}
+.v-text.hl-blue{background:rgba(100,160,255,.22)}
+.v-text.hl-pink{background:rgba(255,100,150,.22)}
+.v-text.hl-purple{background:rgba(160,100,255,.22)}
+
+/* Floating nav — overlaid on text like Strong image 3 */
+.bible-float-nav{
+  position:absolute;
+  bottom:0;left:0;right:0;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:8px 12px;
+  background:transparent;
+  pointer-events:none;
+}
+.bfn-side{
+  width:32px;height:32px;border-radius:50%;
+  background:rgba(15,28,46,.7);
+  border:1px solid rgba(255,255,255,.15);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;pointer-events:all;
+  backdrop-filter:blur(6px);
+}
+.bfn-side svg{width:13px;height:13px;stroke:rgba(255,255,255,.75);stroke-width:2.5;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.bfn-center{
+  width:36px;height:36px;border-radius:50%;
+  background:rgba(15,28,46,.7);
+  border:1px solid rgba(255,255,255,.15);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;pointer-events:all;
+  backdrop-filter:blur(6px);
+}
+.bfn-center svg{width:15px;height:15px;stroke:rgba(255,255,255,.75);stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round}
+
+/* Bible search wrap in header */
+.bh-search-wrap{
+  flex:1;min-width:0;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:10px;
+  padding:4px 8px;
+  display:flex;align-items:center;gap:5px;
+  cursor:text;
+}
+.bh-search-icon{flex-shrink:0;opacity:.6}
+.bh-search-input{
+  background:transparent;border:none;outline:none;
+  font-family:'Lato',sans-serif;font-size:10px;
+  color:white;width:100%;
+}
+.bh-search-input::placeholder{color:rgba(255,255,255,.35)}
+/* Window (history) button */
+.bh-window-btn{
+  width:28px;height:28px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;flex-shrink:0;
+  transition:background .15s;
+}
+.bh-window-btn:active{background:rgba(255,255,255,.2)}
+
+/* Bible footer nav */
+.bible-bottom-nav{
+  background:rgba(15,28,46,.95);
+  border-top:1px solid rgba(255,255,255,.06);
+  border-radius:0 0 36px 36px;
+  padding:8px 12px 16px;
+  display:flex;align-items:flex-end;justify-content:space-around;
+  flex-shrink:0;z-index:50;
+}
+.bible-bottom-nav .ni svg{stroke:rgba(255,255,255,.3)}
+.bible-bottom-nav .ni.active svg{stroke:var(--cyan)}
+.bible-bottom-nav .ni-lbl{color:rgba(255,255,255,.3)}
+.bible-bottom-nav .ni.active .ni-lbl{color:rgba(255,255,255,.9)}
+.bible-bottom-nav .fab{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.1);color:rgba(255,255,255,.6)}
+
+/* Verse context menu */
+.verse-ctx{
+  position:absolute;
+  background:rgba(10,20,38,.96);
+  backdrop-filter:blur(12px);
+  border-radius:12px;padding:8px;
+  box-shadow:0 8px 28px rgba(0,0,0,.6);
+  border:1px solid rgba(255,255,255,.1);
+  z-index:300;display:none;min-width:175px;
+}
+.verse-ctx.show{display:flex;flex-direction:column;gap:2px}
+.vcm-title{font-size:8px;font-weight:800;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.35);padding:3px 8px;margin-bottom:2px;font-family:'Lato',sans-serif}
+.vcm-colors{display:flex;gap:5px;padding:5px 10px;align-items:center}
+.vcm-color-lbl{font-size:8px;color:rgba(255,255,255,.35);font-weight:700;font-family:'Lato',sans-serif;margin-right:2px}
+.vcm-dot{width:16px;height:16px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:border-color .15s,transform .1s;flex-shrink:0}
+.vcm-dot:active{transform:scale(.85)}.vcm-dot.sel{border-color:white}
+.vcm-row{display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:8px;cursor:pointer;transition:background .12s}
+.vcm-row:active{background:rgba(255,255,255,.07)}
+.vcm-row svg{width:12px;height:12px;stroke:rgba(255,255,255,.65);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.vcm-row span{font-size:10px;font-weight:600;color:rgba(255,255,255,.82);font-family:'Lato',sans-serif}
+
+/* Version modal */
+.version-modal{position:absolute;bottom:0;left:0;right:0;background:var(--bible-surface);border-radius:20px 20px 0 0;border-top:1px solid rgba(255,255,255,.1);z-index:200;transform:translateY(100%);transition:transform .32s cubic-bezier(.4,0,.2,1);padding-bottom:30px}
+.version-modal.open{transform:translateY(0)}
+.vm-handle{width:36px;height:4px;background:rgba(255,255,255,.15);border-radius:2px;margin:10px auto 14px}
+.vm-title{font-size:13px;font-weight:800;color:white;padding:0 18px;margin-bottom:10px;font-family:'Lato',sans-serif}
+.vm-list{display:flex;flex-direction:column;gap:3px;padding:0 16px}
+.vm-row{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:rgba(255,255,255,.05);border-radius:10px;cursor:pointer;border:1px solid rgba(255,255,255,.05);transition:background .15s}
+.vm-row:active{background:rgba(255,255,255,.1)}
+.vm-row.selected{border-color:var(--cyan);background:rgba(46,196,182,.08)}
+.vm-name{font-size:12px;font-weight:700;color:white;font-family:'Lato',sans-serif}
+.vm-desc{font-size:9px;color:rgba(255,255,255,.4);margin-top:1px;font-family:'Lato',sans-serif}
+.vm-check{color:var(--cyan);font-size:13px}
+
+/* Book modal — Strong style: list with expand/chapters grid */
+.bible-book-modal{position:absolute;inset:0;background:var(--bible-surface);border-radius:36px;z-index:150;display:flex;flex-direction:column;transform:translateY(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);overflow:hidden}
+.bible-book-modal.open{transform:translateY(0)}
+.bbm-handle-row{display:flex;align-items:center;justify-content:center;padding:10px 18px 8px;border-bottom:1px solid rgba(255,255,255,.07);position:relative}
+.bbm-handle{width:36px;height:4px;background:rgba(255,255,255,.18);border-radius:2px}
+.bbm-h-title{font-size:14px;font-weight:800;color:white;font-family:'Lato',sans-serif;position:absolute}
+.bbm-h-more{position:absolute;right:18px;color:rgba(255,255,255,.5);font-size:18px;cursor:pointer}
+.bbm-scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.bbm-scroll::-webkit-scrollbar{display:none}
+/* Each book is an expand row */
+.bbm-book-row{display:flex;align-items:center;padding:13px 20px;border-bottom:1px solid rgba(255,255,255,.04);cursor:pointer;transition:background .12s}
+.bbm-book-row:active{background:rgba(255,255,255,.05)}
+.bbm-book-row.expanded{background:rgba(46,196,182,.05)}
+.bbm-book-name{font-family:'Lato',sans-serif;font-size:14px;font-weight:400;color:rgba(255,255,255,.82);flex:1}
+.bbm-book-name.active{color:var(--cyan);font-weight:700}
+.bbm-chev{color:rgba(255,255,255,.35);font-size:13px;transition:transform .2s}
+.bbm-chev.up{transform:rotate(180deg)}
+/* Chapter grid inside expanded book */
+.bbm-ch-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;padding:10px 16px 16px;background:rgba(0,0,0,.2)}
+.bbm-ch-cell{
+  aspect-ratio:1;border-radius:10px;
+  background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.08);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Lato',sans-serif;font-size:13px;font-weight:400;
+  color:rgba(255,255,255,.75);cursor:pointer;
+  transition:background .12s;
+}
+.bbm-ch-cell:active{background:rgba(46,196,182,.25);color:white}
+.bbm-ch-cell.current{background:rgba(46,196,182,.2);border-color:var(--cyan);color:var(--cyan);font-weight:700}
+
+/* ══════════ BOOKS (méditations) ══════════ */
+.books-hero{background:linear-gradient(160deg,var(--royal-mid) 0%,var(--royal) 100%);padding:6px 18px 16px;flex-shrink:0;position:relative;overflow:hidden;border-radius:0 0 24px 24px}
+.books-hero::before{content:'';position:absolute;top:-40px;right:-40px;width:110px;height:110px;border-radius:50%;background:rgba(212,180,90,.1);pointer-events:none}
+.hero-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
+.hero-lbl{font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:2px}
+.hero-h1{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:white}
+.hero-av{width:34px;height:34px;background:rgba(255,255,255,.15);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;border:1.5px solid rgba(212,180,90,.4)}
+.stats-row{display:flex;gap:6px}
+.stat-pill{background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.18);border-radius:20px;padding:4px 9px;display:flex;align-items:center;gap:4px}
+.sp-num{font-size:12px;font-weight:900;color:var(--gold-light)}.sp-lbl{font-size:8px;font-weight:600;color:rgba(255,255,255,.75);white-space:nowrap}
+.search-wrap{padding:10px 16px 4px;flex-shrink:0}
+.search-bar{background:var(--card);border-radius:12px;padding:9px 13px;display:flex;align-items:center;gap:8px;box-shadow:0 2px 10px var(--shadow);transition:background .3s}
+.search-bar input{border:none;outline:none;font-family:'Nunito',sans-serif;font-size:13px;font-weight:600;color:var(--text);background:transparent;width:100%}
+.search-bar input::placeholder{color:var(--text-faint)}
+.tabs-row{padding:0 16px 8px;display:flex;gap:7px;flex-shrink:0}
+.tab{flex:1;padding:7px;border-radius:10px;font-size:10px;font-weight:800;text-align:center;cursor:pointer;transition:all .2s}
+.tab.active{background:var(--royal);color:white;box-shadow:0 3px 10px rgba(27,58,107,.3)}
+.tab.inactive{background:var(--surface);color:var(--text-soft);border:1.5px solid var(--border)}
+.books-scroll{flex:1;overflow-y:auto;padding:0 16px 8px;-webkit-overflow-scrolling:touch}
+.books-scroll::-webkit-scrollbar{display:none}
+.t-lbl{font-size:9px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--text-soft);margin:10px 0 7px}
+.book-card{background:var(--card);border-radius:13px;padding:10px 12px;margin-bottom:7px;display:flex;align-items:center;gap:10px;box-shadow:0 2px 8px var(--shadow);cursor:pointer;transition:transform .15s,background .3s;user-select:none}
+.book-card:active{transform:scale(.97)}
+.bk-ico{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;color:var(--royal)}
+.bg-1{background:linear-gradient(135deg,#E8EEF8,#D0DAF0)}.bg-2{background:linear-gradient(135deg,#FDF6E3,#F5E9C0)}.bg-3{background:linear-gradient(135deg,#E8F5E9,#C8E6C9)}.bg-4{background:linear-gradient(135deg,#FDE8E8,#F5C8C8)}.bg-5{background:linear-gradient(135deg,#F3E5F5,#E1BEE7)}
+.bk-info{flex:1;min-width:0}.bk-name{font-size:12px;font-weight:800;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:1px}.bk-meta{font-size:9px;color:var(--text-soft)}
+.bk-right{display:flex;align-items:center;gap:4px;flex-shrink:0}
+.bk-badge{font-size:8px;font-weight:800;padding:2px 7px;border-radius:20px}
+.bdone{background:#E8F5E9;color:#2E7D32}.bprog{background:#FFF9E6;color:#B8860B}.bnew{background:var(--bg);color:var(--text-soft)}
+.bk-chev svg{width:12px;height:12px;stroke:var(--text-soft);stroke-width:2.5;fill:none;stroke-linecap:round;stroke-linejoin:round}
+
+/* ══════════ NOTEPAD (previous card style + color labels) ══════════ */
+.np-hero{background:linear-gradient(160deg,var(--royal) 0%,#102950 100%);padding:6px 18px 14px;flex-shrink:0;position:relative;overflow:hidden;border-radius:0 0 22px 22px}
+.np-hero::after{content:'';position:absolute;bottom:-25px;right:-25px;width:80px;height:80px;border-radius:50%;background:rgba(212,180,90,.1);pointer-events:none}
+.np-nav{display:flex;align-items:center;gap:9px;margin-bottom:10px}
+.np-nav-title{font-size:11px;font-weight:700;color:rgba(255,255,255,.7)}
+.np-bk-hdr{display:flex;align-items:center;gap:10px}
+.np-bk-ico{width:40px;height:40px;border-radius:11px;background:rgba(255,255,255,.12);border:1.5px solid rgba(212,180,90,.4);display:flex;align-items:center;justify-content:center;font-size:18px}
+.np-bk-name{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:white}
+.np-bk-sub{font-size:9px;font-weight:600;color:rgba(255,255,255,.65);margin-top:1px}
+.ch-sel{padding:9px 16px 4px;flex-shrink:0}
+.cs-lbl{font-size:9px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--text-soft);margin-bottom:6px}
+.ch-scroll{display:flex;gap:5px;overflow-x:auto;padding-bottom:3px;-webkit-overflow-scrolling:touch}
+.ch-scroll::-webkit-scrollbar{display:none}
+.ch-btn{flex-shrink:0;min-width:26px;height:26px;padding:0 5px;border-radius:7px;background:var(--surface);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:var(--text);cursor:pointer;transition:all .15s;position:relative}
+.ch-btn.active{background:var(--royal);color:var(--gold-light);border-color:var(--royal)}
+.ch-btn.has-note{border-color:var(--gold)}
+.ch-btn.has-note::after{content:'';position:absolute;top:-3px;right:-3px;width:5px;height:5px;background:var(--gold);border-radius:50%;border:1.5px solid var(--bg)}
+.np-area{flex:1;overflow-y:auto;padding:10px 16px 10px;-webkit-overflow-scrolling:touch}
+.np-area::-webkit-scrollbar{display:none}
+
+/* Section cards — previous visual style */
+.ns-card{background:var(--card);border-radius:14px;overflow:hidden;box-shadow:0 2px 10px var(--shadow);margin-bottom:9px;cursor:pointer;transition:background .3s;border-left:4px solid transparent}
+.ns-card:active{opacity:.92}
+.ns-card-hdr{display:flex;align-items:center;gap:9px;padding:10px 12px;border-bottom:1px solid var(--border)}
+.ns-ico{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.ci-gold{background:rgba(212,180,90,.15)}.ci-blue{background:rgba(27,58,107,.1)}.ci-green{background:rgba(46,125,50,.12)}.ci-purple{background:rgba(103,58,183,.1)}.ci-red{background:rgba(183,28,28,.1)}.ci-cyan{background:rgba(46,196,182,.1)}
+.ns-card-info{flex:1}
+.ns-card-title{font-size:11px;font-weight:800;color:var(--text)}
+.ns-card-sub{font-size:9px;color:var(--text-soft);margin-top:1px}
+
+/* Color label chip on card header */
+.ns-label-chip{display:inline-flex;align-items:center;gap:5px;border-radius:20px;padding:3px 9px;font-size:9px;font-weight:700;margin-left:auto;cursor:pointer;position:relative;flex-shrink:0}
+.ns-label-chip svg{width:9px;height:9px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round}
+
+.ns-edit-btn{font-size:9px;font-weight:700;color:var(--royal);background:var(--bg);padding:3px 8px;border-radius:20px;border:1px solid var(--border);flex-shrink:0;margin-left:6px}
+[data-theme="dark"] .ns-edit-btn{color:var(--gold-light)}
+.ns-preview{padding:9px 12px;font-size:11px;color:var(--text);line-height:1.5;font-weight:500;min-height:36px}
+.ns-preview.empty{color:var(--text-faint);font-style:italic}
+
+/* Label picker popup */
+.label-picker{
+  position:absolute;right:0;top:100%;margin-top:4px;
+  background:var(--surface);border-radius:14px;
+  padding:10px;box-shadow:0 8px 28px var(--shadow);
+  border:1px solid var(--border);z-index:100;
+  display:none;min-width:200px;
+}
+.label-picker.show{display:block}
+.lp-title{font-size:9px;font-weight:800;letter-spacing:.15em;text-transform:uppercase;color:var(--text-soft);margin-bottom:8px;padding:0 2px}
+.lp-grid{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px}
+.lp-chip{display:inline-flex;align-items:center;gap:4px;border-radius:20px;padding:4px 10px;font-size:10px;font-weight:700;cursor:pointer;border:2px solid transparent;transition:all .15s}
+.lp-chip.selected{border-color:rgba(0,0,0,.2)}
+.lp-chip:active{transform:scale(.93)}
+.lp-custom{display:flex;align-items:center;gap:6px;padding-top:8px;border-top:1px solid var(--border)}
+.lp-custom-input{flex:1;border:1px solid var(--border);border-radius:8px;padding:5px 8px;font-size:11px;font-family:'Nunito',sans-serif;color:var(--text);background:var(--bg);outline:none}
+.lp-custom-color{width:26px;height:26px;border-radius:6px;border:1px solid var(--border);cursor:pointer;overflow:hidden}
+.lp-custom-color input[type=color]{width:130%;height:130%;margin:-15%;border:none;cursor:pointer}
+.lp-add-btn{font-size:10px;font-weight:800;color:var(--royal);cursor:pointer;padding:4px 8px;background:var(--bg);border-radius:8px;border:1px solid var(--border)}
+
+.save-btn-row{margin-top:4px;background:linear-gradient(135deg,var(--royal),var(--royal-mid));border-radius:13px;padding:13px;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;box-shadow:0 5px 16px rgba(27,58,107,.28)}
+.save-btn-row span{font-size:12px;font-weight:800;color:white}
+.sc-dot{width:6px;height:6px;border-radius:50%;background:var(--gold-light)}
+.saved-badge{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);background:var(--surface);border-radius:20px;padding:18px 26px;display:flex;flex-direction:column;align-items:center;gap:7px;box-shadow:0 20px 60px rgba(27,58,107,.35);z-index:500;transition:transform .3s cubic-bezier(.34,1.56,.64,1),opacity .3s;opacity:0;pointer-events:none}
+.saved-badge.show{transform:translate(-50%,-50%) scale(1);opacity:1}
+.sb-icon{font-size:30px}.sb-text{font-size:12px;font-weight:800;color:var(--text)}.sb-sub{font-size:10px;color:var(--text-soft)}
+
+/* ══════════ PAGE HERO ══════════ */
+.page-hero{background:linear-gradient(160deg,var(--royal-mid) 0%,var(--royal) 100%);padding:6px 18px 16px;flex-shrink:0;border-radius:0 0 22px 22px;position:relative;overflow:hidden}
+.page-hero::after{content:'';position:absolute;bottom:-30px;right:-30px;width:100px;height:100px;border-radius:50%;background:rgba(212,180,90,.1);pointer-events:none}
+.page-hero-nav{display:flex;align-items:center;gap:9px;margin-bottom:6px}
+.page-hero-lbl{font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);font-weight:700}
+.page-hero-h1{font-family:'Playfair Display',serif;font-size:21px;font-weight:700;color:white}
+
+/* ══════════ GENERIC SECTIONS ══════════ */
+.sec-tabs{display:flex;gap:7px;padding:10px 16px 6px;flex-shrink:0}
+.sec-tab{flex:1;padding:8px;border-radius:10px;font-size:11px;font-weight:800;text-align:center;cursor:pointer;transition:all .2s}
+.sec-tab.active{background:var(--royal);color:white;box-shadow:0 3px 10px rgba(27,58,107,.3)}
+.sec-tab.inactive{background:var(--surface);color:var(--text-soft);border:1.5px solid var(--border)}
+.sec-body{flex:1;overflow-y:auto;padding:0 16px 80px;-webkit-overflow-scrolling:touch}
+.sec-body::-webkit-scrollbar{display:none}
+.sec-date-label{font-size:9px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--text-soft);margin:12px 0 8px;display:flex;align-items:center;gap:8px}
+.sec-date-label::after{content:'';flex:1;height:1px;background:var(--border)}
+.sec-entry-card{background:var(--card);border-radius:14px;padding:12px 13px;margin-bottom:8px;box-shadow:0 2px 10px var(--shadow);cursor:pointer;transition:background .3s;position:relative;overflow:hidden}
+.sec-entry-card:active{opacity:.9}
+.sec-entry-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:3px 0 0 3px}
+.sec-entry-card.songe::before{background:linear-gradient(180deg,#6A1B9A,#9C27B0)}.sec-entry-card.prophetie::before{background:linear-gradient(180deg,var(--gold),var(--gold-light))}
+.sec-entry-card.culte::before{background:linear-gradient(180deg,#0277BD,#29B6F6)}.sec-entry-card.programme::before{background:linear-gradient(180deg,#2E7D32,#66BB6A)}
+.sec-entry-card.theme-dev::before{background:linear-gradient(180deg,#B71C1C,#EF5350)}.sec-entry-card.theme-ins::before{background:linear-gradient(180deg,#6A1B9A,#AB47BC)}
+.sec-entry-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px}
+.sec-entry-badge{font-size:9px;font-weight:800;letter-spacing:.08em;padding:2px 8px;border-radius:20px}
+.badge-songe{background:rgba(106,27,154,.1);color:#6A1B9A}.badge-prophetie{background:rgba(212,180,90,.15);color:#B8860B}
+.badge-culte{background:rgba(2,119,189,.1);color:#0277BD}.badge-programme{background:rgba(46,125,50,.1);color:#2E7D32}
+.badge-theme-dev{background:rgba(183,28,28,.1);color:#B71C1C}.badge-theme-ins{background:rgba(106,27,154,.1);color:#6A1B9A}
+.sec-entry-time{font-size:9px;color:var(--text-soft);font-weight:600}
+.sec-entry-title{font-size:12px;font-weight:800;color:var(--text);margin-bottom:3px}
+.sec-entry-preview{font-size:10px;color:var(--text-soft);line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.sec-audio-pill{display:inline-flex;align-items:center;gap:4px;background:rgba(27,58,107,.08);border-radius:20px;padding:2px 8px;margin-top:5px;font-size:8px;font-weight:700;color:var(--royal)}
+.sec-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;gap:10px;text-align:center}
+.sec-empty-icon{font-size:36px;opacity:.4}.sec-empty-text{font-size:13px;font-weight:700;color:var(--text-soft)}.sec-empty-sub{font-size:11px;color:var(--text-faint)}
+.sp-fab-wrap{position:absolute;bottom:76px;right:18px;z-index:100}
+.sp-fab{width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,var(--royal),var(--royal-mid));box-shadow:0 6px 20px rgba(27,58,107,.4);display:flex;align-items:center;justify-content:center;cursor:pointer}
+.sp-fab svg{width:22px;height:22px;stroke:white;stroke-width:2.2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.fab-overlay{position:absolute;inset:0;border-radius:36px;background:rgba(0,0,0,.5);z-index:90;display:flex;flex-direction:column;align-items:flex-end;justify-content:flex-end;padding:0 18px 76px;gap:10px;opacity:0;pointer-events:none;transition:opacity .25s}
+.fab-overlay.show{opacity:1;pointer-events:all}
+.fab-choice{display:flex;align-items:center;gap:10px;cursor:pointer;transform:translateY(20px);transition:transform .25s,opacity .25s;opacity:0}
+.fab-overlay.show .fab-choice{transform:translateY(0);opacity:1}
+.fab-overlay.show .fab-choice:nth-child(1){transition-delay:.05s}.fab-overlay.show .fab-choice:nth-child(2){transition-delay:.1s}
+.fab-choice-label{font-size:12px;font-weight:800;color:white;background:rgba(0,0,0,.6);padding:6px 14px;border-radius:20px}
+.fab-choice-btn{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 4px 14px rgba(0,0,0,.3)}
+
+/* Gen editor */
+.gen-editor{background:var(--surface)}
+.gen-topbar{display:flex;align-items:center;justify-content:space-between;padding:5px 14px 8px;border-bottom:1px solid var(--border);flex-shrink:0;background:var(--toolbar)}
+.gen-back{display:flex;align-items:center;gap:4px;font-size:13px;font-weight:700;color:#007AFF;cursor:pointer}
+[data-theme="dark"] .gen-back{color:var(--gold-light)}
+.gen-back svg{width:15px;height:15px;stroke:#007AFF;stroke-width:2.5;fill:none;stroke-linecap:round;stroke-linejoin:round}
+[data-theme="dark"] .gen-back svg{stroke:var(--gold-light)}
+.gen-badge{padding:4px 12px;border-radius:20px;font-size:11px;font-weight:800}
+.gen-ok{font-size:13px;font-weight:700;color:#007AFF;cursor:pointer}
+[data-theme="dark"] .gen-ok{color:var(--gold-light)}
+.gen-title-row{padding:10px 16px 6px;flex-shrink:0;border-bottom:1px solid var(--border)}
+.gen-title-input{width:100%;border:none;outline:none;font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--text);background:transparent;padding:0}
+.gen-title-input::placeholder{color:var(--text-faint)}
+.gen-meta{padding:4px 16px 5px;font-size:9px;color:var(--text-soft);font-weight:600;flex-shrink:0;border-bottom:1px solid var(--border);background:var(--toolbar)}
+.gen-autosave{display:flex;align-items:center;gap:5px;padding:3px 16px 4px;flex-shrink:0;background:var(--toolbar);border-bottom:1px solid var(--border)}
+.asi-dot{width:6px;height:6px;border-radius:50%;background:#ccc;transition:background .3s}
+.asi-dot.saved{background:#4CAF50}.asi-dot.saving{background:var(--gold);animation:pulse .8s ease infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.asi-lbl{font-size:9px;color:var(--text-soft);font-weight:600}
+.gen-sections{flex:1;overflow-y:auto;padding:10px 14px 12px;-webkit-overflow-scrolling:touch}
+.gen-sections::-webkit-scrollbar{display:none}
+.gs-card{background:var(--card);border-radius:13px;overflow:hidden;box-shadow:0 2px 10px var(--shadow);margin-bottom:9px;cursor:pointer;transition:background .3s}
+.gs-card:active{opacity:.92}
+.gs-card-hdr{display:flex;align-items:center;gap:9px;padding:10px 12px;border-bottom:1px solid var(--border)}
+.gs-ico{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.gs-card-info{flex:1}.gs-card-title{font-size:11px;font-weight:800;color:var(--text)}.gs-card-sub{font-size:9px;color:var(--text-soft);margin-top:1px}
+.gs-edit-btn{font-size:9px;font-weight:700;color:var(--royal);background:var(--bg);padding:3px 8px;border-radius:20px;border:1px solid var(--border);flex-shrink:0}
+[data-theme="dark"] .gs-edit-btn{color:var(--gold-light)}
+.gs-preview{padding:9px 12px;font-size:11px;color:var(--text);line-height:1.5;font-weight:500;min-height:36px}
+.gs-preview.empty{color:var(--text-faint);font-style:italic}
+.gen-save-bar{padding:8px 14px 10px;flex-shrink:0;background:var(--surface);border-top:1px solid var(--border)}
+.gen-save-btn{background:linear-gradient(135deg,var(--royal),var(--royal-mid));border-radius:12px;padding:11px;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;box-shadow:0 4px 14px rgba(27,58,107,.25)}
+.gen-save-btn span{font-size:12px;font-weight:800;color:white}
+.audio-section{background:var(--card);border-radius:13px;overflow:hidden;box-shadow:0 2px 10px var(--shadow);margin-bottom:9px;transition:background .3s}
+.audio-section-hdr{display:flex;align-items:center;gap:9px;padding:10px 12px;border-bottom:1px solid var(--border)}
+.audio-hdr-icon{width:28px;height:28px;border-radius:50%;background:rgba(183,28,28,.1);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.audio-hdr-info{flex:1}.audio-hdr-title{font-size:11px;font-weight:800;color:var(--text)}.audio-hdr-sub{font-size:9px;color:var(--text-soft);margin-top:1px}
+.audio-body{padding:12px 14px}
+.rec-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.rec-btn{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#B71C1C,#EF5350);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 14px rgba(183,28,28,.35);flex-shrink:0}
+.rec-btn.recording{animation:recPulse 1s ease infinite}
+@keyframes recPulse{0%,100%{box-shadow:0 4px 14px rgba(183,28,28,.35)}50%{box-shadow:0 4px 24px rgba(183,28,28,.7),0 0 0 8px rgba(183,28,28,.15)}}
+.rec-btn svg{width:19px;height:19px;stroke:white;stroke-width:2.2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.rec-btn.recording svg{display:none}.rec-btn .rec-stop-icon{display:none;width:13px;height:13px;background:white;border-radius:2px}.rec-btn.recording .rec-stop-icon{display:block}
+.rec-info{flex:1}.rec-status{font-size:12px;font-weight:800;color:var(--text)}.rec-timer{font-size:11px;color:var(--text-soft);font-weight:600;margin-top:1px}
+.waveform{height:28px;background:var(--bg);border-radius:8px;display:flex;align-items:center;gap:2px;padding:0 8px;margin-bottom:10px;overflow:hidden}
+.wave-bar{flex:1;border-radius:2px;background:var(--border);transition:height .1s}.wave-bar.active{background:var(--gold)}
+.recordings-list{display:flex;flex-direction:column;gap:5px}
+.rec-item{background:var(--bg);border-radius:9px;padding:8px 11px;display:flex;align-items:center;gap:8px;border:1px solid var(--border)}
+.rec-play-btn{width:28px;height:28px;border-radius:50%;background:var(--royal);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0}
+.rec-play-btn svg{width:11px;height:11px;fill:white;stroke:none;margin-left:2px}
+.rec-item-info{flex:1;min-width:0}.rec-item-name{font-size:10px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rec-item-dur{font-size:8px;color:var(--text-soft)}
+.rec-ww{flex:1;height:16px;background:var(--border);border-radius:8px;overflow:hidden}
+.rec-ww-fill{height:100%;background:linear-gradient(90deg,var(--royal),var(--royal-mid));border-radius:8px;width:0%;transition:width .1s}
+.rec-del{width:22px;height:22px;border-radius:50%;background:rgba(183,28,28,.1);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;color:#B71C1C;font-size:11px}
+.import-audio-btn{display:flex;align-items:center;gap:8px;background:var(--bg);border:1.5px dashed var(--border);border-radius:9px;padding:9px 13px;cursor:pointer;margin-top:7px}
+.import-audio-btn svg{width:16px;height:16px;stroke:var(--text-soft);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.import-audio-btn span{font-size:10px;font-weight:700;color:var(--text-soft)}
+.imported-files{display:flex;flex-direction:column;gap:4px;margin-top:5px}
+.imported-file{display:flex;align-items:center;gap:7px;background:var(--bg);border-radius:8px;padding:6px 9px;border:1px solid var(--border)}
+.if-icon{font-size:14px;flex-shrink:0}.if-name{font-size:10px;font-weight:600;color:var(--text);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.if-del{font-size:13px;color:var(--text-soft);cursor:pointer;flex-shrink:0}
+
+/* ══════════ RESSOURCES ══════════ */
+#view-ressources .status-bar{background:var(--royal)}
+.res-hero{background:linear-gradient(160deg,#1B5E20 0%,#2E7D32 100%);padding:6px 18px 16px;flex-shrink:0;border-radius:0 0 22px 22px;position:relative;overflow:hidden}
+.res-hero::after{content:'';position:absolute;bottom:-30px;right:-30px;width:90px;height:90px;border-radius:50%;background:rgba(212,180,90,.12);pointer-events:none}
+.res-body{flex:1;overflow-y:auto;padding:10px 16px 16px;-webkit-overflow-scrolling:touch}
+.res-body::-webkit-scrollbar{display:none}
+.res-tabs{display:flex;gap:7px;padding:10px 16px 8px;flex-shrink:0}
+.res-tab{flex:1;padding:7px;border-radius:10px;font-size:10px;font-weight:800;text-align:center;cursor:pointer;transition:all .2s}
+.res-tab.active{background:#2E7D32;color:white;box-shadow:0 3px 10px rgba(46,125,50,.3)}
+.res-tab.inactive{background:var(--surface);color:var(--text-soft);border:1.5px solid var(--border)}
+.res-search{margin:0 16px 10px;background:var(--card);border-radius:11px;padding:8px 12px;display:flex;align-items:center;gap:8px;box-shadow:0 2px 8px var(--shadow)}
+.res-search input{border:none;outline:none;font-family:'Nunito',sans-serif;font-size:13px;font-weight:600;color:var(--text);background:transparent;width:100%}
+.res-search input::placeholder{color:var(--text-faint)}
+.author-group{margin-bottom:14px}
+.author-header{display:flex;align-items:center;gap:10px;margin-bottom:7px;cursor:pointer}
+.author-avatar{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:white;flex-shrink:0;border:2px solid rgba(212,180,90,.3)}
+.author-name{font-size:12px;font-weight:800;color:var(--text);flex:1}
+.author-count{font-size:9px;color:var(--text-soft);background:var(--bg);padding:2px 8px;border-radius:20px;font-weight:700}
+.author-books{display:flex;flex-direction:column;gap:6px}
+/* Book item — height très réduite */
+.book-item{background:var(--card);border-radius:9px;padding:5px 9px;display:flex;align-items:center;gap:8px;box-shadow:0 1px 5px var(--shadow);cursor:pointer;transition:background .2s,transform .15s}
+.book-item:active{transform:scale(.97)}
+.book-cover{width:28px;height:38px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;position:relative;overflow:hidden;box-shadow:2px 2px 5px rgba(0,0,0,.2)}
+.book-cover::before{content:'';position:absolute;inset:0;background:inherit;filter:brightness(.7)}
+.book-cover span{position:relative;z-index:1}
+.book-info{flex:1;min-width:0}
+.book-title{font-size:11px;font-weight:800;color:var(--text);margin-bottom:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.book-author-tag{font-size:9px;color:var(--text-soft);margin-bottom:2px}
+.book-price-row{display:flex;align-items:center;gap:5px}
+.book-price{font-size:11px;font-weight:900;color:#2E7D32}
+.book-price.free{color:var(--royal-mid)}
+.buy-btn{background:linear-gradient(135deg,#2E7D32,#388E3C);color:white;font-size:8px;font-weight:800;padding:2px 8px;border-radius:20px}
+.res-section-lbl{font-size:9px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--text-soft);margin:14px 0 10px;display:flex;align-items:center;gap:8px}
+.res-section-lbl::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* ══════════ MENU ══════════ */
+.menu-hero{background:linear-gradient(160deg,var(--royal) 0%,#102950 100%);padding:6px 18px 16px;flex-shrink:0;border-radius:0 0 22px 22px}
+.menu-hero-lbl{font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:2px}
+.menu-hero-h1{font-family:'Playfair Display',serif;font-size:21px;font-weight:700;color:white}
+.menu-body{flex:1;overflow-y:auto;padding:12px 16px;-webkit-overflow-scrolling:touch}
+.menu-body::-webkit-scrollbar{display:none}
+.menu-sec-lbl{font-size:9px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--text-soft);margin:12px 0 8px}
+.menu-item{background:var(--card);border-radius:13px;padding:12px 14px;margin-bottom:7px;display:flex;align-items:center;gap:11px;box-shadow:0 2px 8px var(--shadow);cursor:pointer;transition:background .3s}
+.menu-item:active{opacity:.88}
+.menu-item-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.menu-item-info{flex:1}.menu-item-name{font-size:12px;font-weight:800;color:var(--text)}.menu-item-sub{font-size:9px;color:var(--text-soft);margin-top:1px}
+.menu-item-arrow svg{width:12px;height:12px;stroke:var(--text-soft);stroke-width:2.5;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.dark-row{background:var(--card);border-radius:13px;padding:12px 14px;display:flex;align-items:center;gap:11px;box-shadow:0 2px 8px var(--shadow);margin-bottom:7px;transition:background .3s}
+.dark-row-label{font-size:12px;font-weight:800;color:var(--text);flex:1}
+.toggle-sw{width:40px;height:22px;background:#ccc;border-radius:11px;position:relative;cursor:pointer;transition:background .25s;flex-shrink:0}
+.toggle-sw.on{background:var(--royal)}
+[data-theme="dark"] .toggle-sw.on{background:var(--gold)}
+.toggle-sw::after{content:'';position:absolute;top:3px;left:3px;width:16px;height:16px;background:white;border-radius:50%;transition:left .25s}
+.toggle-sw.on::after{left:21px}
+
+/* Other shared */
+.sec-tabs-culte{display:flex;gap:7px;padding:10px 16px 6px;flex-shrink:0}
+
+/* ══════════════════════════════════
+   IPHONE NOTES EDITOR
+══════════════════════════════════ */
+#view-iphone-note{background:#000;border-radius:36px}
+#view-iphone-note .status-bar{background:#000;padding:12px 18px 4px}
+#view-iphone-note .status-bar .s-time{color:white;font-size:14px;font-weight:700}
+
+/* Top toolbar — exactly like iPhone Notes */
+.in-topbar{
+  background:#1C1C1E;
+  padding:8px 14px 10px;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-shrink:0;
+  gap:8px;
+}
+/* Back button — big circle like in image */
+.in-back{
+  width:38px;height:38px;border-radius:50%;
+  background:#2C2C2E;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;flex-shrink:0;
+}
+.in-back svg{width:16px;height:16px;stroke:white;stroke-width:2.5;fill:none;stroke-linecap:round;stroke-linejoin:round}
+/* Middle group — undo + share + more — pill shape */
+.in-mid-group{
+  display:flex;align-items:center;
+  background:#2C2C2E;border-radius:20px;
+  padding:3px 4px;gap:2px;
+}
+.in-mid-btn{
+  width:36px;height:32px;border-radius:16px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:background .12s;
+}
+.in-mid-btn:active{background:rgba(255,255,255,.12)}
+.in-mid-btn svg{width:16px;height:16px;stroke:rgba(255,255,255,.85);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.in-mid-sep{width:1px;height:18px;background:rgba(255,255,255,.15)}
+/* Done button — gold circle with checkmark */
+.in-done{
+  width:38px;height:38px;border-radius:50%;
+  background:var(--gold);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;flex-shrink:0;
+  box-shadow:0 2px 10px rgba(212,180,90,.4);
+}
+.in-done svg{width:18px;height:18px;stroke:#1B3A6B;stroke-width:2.8;fill:none;stroke-linecap:round;stroke-linejoin:round}
+
+/* Section header inside note */
+.in-section-header{
+  display:flex;align-items:center;gap:10px;
+  padding:8px 18px 6px;
+  border-bottom:1px solid rgba(255,255,255,.06);
+  flex-shrink:0;
+}
+.in-section-icon{
+  width:28px;height:28px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;flex-shrink:0;
+}
+.in-section-name{font-size:13px;font-weight:700;color:rgba(255,255,255,.85)}
+.in-section-meta{font-size:10px;color:rgba(255,255,255,.35);margin-left:auto}
+/* Label chip in note header */
+.in-label-chip{
+  display:inline-flex;align-items:center;gap:4px;
+  border-radius:20px;padding:3px 10px;
+  font-size:9px;font-weight:700;cursor:pointer;
+  transition:opacity .15s;
+}
+.in-label-chip:active{opacity:.75}
+
+/* Auto-save indicator */
+.in-autosave{
+  display:flex;align-items:center;gap:6px;
+  padding:4px 18px;
+  flex-shrink:0;
+}
+.in-as-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:#555;transition:background .3s;
+}
+.in-as-dot.saved{background:#30D158}
+.in-as-dot.saving{background:var(--gold);animation:pulse .8s ease infinite}
+.in-as-txt{font-size:10px;color:rgba(255,255,255,.35);font-weight:500}
+
+/* The actual writing area */
+.in-writing{
+  flex:1;overflow-y:auto;
+  padding:12px 18px 20px;
+  -webkit-overflow-scrolling:touch;
+  background:#000;
+}
+.in-writing::-webkit-scrollbar{display:none}
+#in-editor{
+  min-height:100%;
+  font-family:-apple-system,'SF Pro Text','Helvetica Neue',sans-serif;
+  font-size:9px;
+  font-weight:400;
+  color:#FFFFFF;
+  line-height:1.75;
+  outline:none;
+  background:transparent;
+  caret-color:#FFD700;
+  word-break:break-word;
+}
+#in-editor:empty::before{
+  content:attr(data-ph);
+  color:rgba(255,255,255,.25);
+  pointer-events:none;
+}
+#in-editor b,#in-editor strong{font-weight:700}
+#in-editor i,#in-editor em{font-style:italic}
+#in-editor u{text-decoration:underline}
+#in-editor s{text-decoration:line-through}
+#in-editor mark{background:rgba(255,215,0,.35);color:white;border-radius:3px;padding:0 2px}
+#in-editor h1{font-size:9px;font-weight:800;margin:10px 0 4px;color:#FFFFFF}
+#in-editor h2{font-size:8px;font-weight:800;margin:9px 0 4px;color:#FFFFFF;text-transform:uppercase;letter-spacing:.05em}
+#in-editor h3{font-size:6px;font-weight:800;margin:8px 0 3px;color:#FFFFFF;text-transform:uppercase;letter-spacing:.07em}
+#in-editor ul{padding-left:16px}
+#in-editor ol{padding-left:16px}
+#in-editor blockquote{border-left:2px solid var(--gold);margin:6px 0;padding:3px 10px;background:rgba(212,180,90,.08);border-radius:0 6px 6px 0;font-style:italic;color:rgba(255,255,255,.8)}
+
+/* Bottom format bar — scrollable pill like image */
+.in-format-bar{
+  background:#000;
+  padding:8px 16px 18px;
+  display:flex;
+  justify-content:center;
+  flex-shrink:0;
+  border-top:1px solid rgba(255,255,255,.06);
+  border-radius:0 0 36px 36px;
+}
+.in-toolbar-pill{
+  display:flex;
+  align-items:center;
+  gap:2px;
+  background:#2C2C2E;
+  border-radius:14px;
+  padding:5px 8px;
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+  max-width:100%;
+  /* hide scrollbar */
+  scrollbar-width:none;
+}
+.in-toolbar-pill::-webkit-scrollbar{display:none}
+.in-tb{
+  width:38px;height:34px;
+  display:flex;align-items:center;justify-content:center;
+  border-radius:9px;
+  cursor:pointer;
+  flex-shrink:0;
+  transition:background .12s;
+  -webkit-tap-highlight-color:transparent;
+}
+.in-tb:active{background:rgba(255,255,255,.15)}
+.in-tb.pressed{background:rgba(255,255,255,.18)}
+
+/* Style panel */
+.in-style-btn{
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:9px;padding:7px 12px;
+  font-family:-apple-system,sans-serif;
+  font-size:13px;font-weight:400;
+  color:rgba(255,255,255,.85);cursor:pointer;
+  transition:background .12s;
+}
+.in-style-btn:active{background:rgba(255,255,255,.18)}
+
+/* Color swatches */
+.in-color-sw{
+  width:24px;height:24px;border-radius:50%;
+  cursor:pointer;flex-shrink:0;
+  border:2px solid rgba(255,255,255,.2);
+  transition:transform .12s;
+}
+.in-color-sw:active{transform:scale(.88)}
+.in-color-custom{
+  width:28px;height:28px;border-radius:50%;
+  overflow:hidden;border:2px solid rgba(255,255,255,.25);
+  background:conic-gradient(red,yellow,lime,cyan,blue,magenta,red);
+  cursor:pointer;flex-shrink:0;
+}
+.in-color-custom input{width:200%;height:200%;margin:-50%;opacity:0;cursor:pointer}
+
+/* Label picker in notes context */
+.in-label-picker{
+  position:absolute;
+  top:0;left:0;right:0;bottom:0;
+  background:rgba(0,0,0,.7);
+  border-radius:36px;
+  z-index:200;
+  display:flex;align-items:flex-end;
+  opacity:0;pointer-events:none;
+  transition:opacity .25s;
+}
+.in-label-picker.show{opacity:1;pointer-events:all}
+.in-lp-sheet{
+  width:100%;
+  background:#1C1C1E;
+  border-radius:18px 18px 0 0;
+  padding:16px 16px 30px;
+}
+.in-lp-handle{width:36px;height:4px;background:rgba(255,255,255,.2);border-radius:2px;margin:0 auto 14px}
+.in-lp-title{font-size:14px;font-weight:700;color:white;margin-bottom:12px;text-align:center}
+.in-lp-grid{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px}
+.in-lp-chip{
+  display:inline-flex;align-items:center;
+  border-radius:20px;padding:5px 12px;
+  font-size:11px;font-weight:700;cursor:pointer;
+  border:2px solid transparent;
+  transition:all .15s;
+}
+.in-lp-chip.sel{border-color:rgba(255,255,255,.4)}
+.in-lp-chip:active{transform:scale(.94)}
+.in-lp-custom{display:flex;align-items:center;gap:8px;padding-top:12px;border-top:1px solid rgba(255,255,255,.08)}
+.in-lp-input{flex:1;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:8px 12px;font-size:12px;color:white;outline:none;font-family:-apple-system,sans-serif}
+.in-lp-input::placeholder{color:rgba(255,255,255,.3)}
+.in-lp-color{width:34px;height:34px;border-radius:8px;border:1px solid rgba(255,255,255,.15);overflow:hidden;flex-shrink:0}
+.in-lp-color input[type=color]{width:150%;height:150%;margin:-25%;border:none;cursor:pointer}
+.in-lp-add{background:var(--gold);color:#1B3A6B;font-size:12px;font-weight:800;padding:8px 14px;border-radius:10px;cursor:pointer;flex-shrink:0}
+
+/* ══════════════════════════════════
+   BIBLE — CLEAN MINIMALIST READER
+══════════════════════════════════ */
+/* Theme variables */
+.brd-day  {--brd-bg:#FFFFFF;--brd-text:#111;--brd-text2:#444;--brd-num:#AAA;--brd-bar:#F5F5F5;--brd-border:#E8E8E8;--brd-chip:#F0F0F0;--brd-chip-sel:#1B3A6B;--brd-chip-sel-text:white;}
+.brd-sepia{--brd-bg:#F8F2E4;--brd-text:#3B2A14;--brd-text2:#6B4C2A;--brd-num:#B8996A;--brd-bar:#EDE3D0;--brd-border:#DDD0B8;--brd-chip:#EDE3D0;--brd-chip-sel:#8B6914;--brd-chip-sel-text:white;}
+.brd-night{--brd-bg:#111;--brd-text:#EEE;--brd-text2:#AAA;--brd-num:#666;--brd-bar:#1C1C1E;--brd-border:#2C2C2E;--brd-chip:#2C2C2E;--brd-chip-sel:#D4B45A;--brd-chip-sel-text:#111;}
+
+#view-bible{background:var(--brd-bg,#FFF);display:flex;flex-direction:column}
+
+/* Top bar */
+.brd-topbar{
+  display:flex;align-items:center;
+  background:var(--brd-bar,#F5F5F5);
+  border-bottom:1px solid var(--brd-border,#E8E8E8);
+  padding:8px 12px;gap:6px;flex-shrink:0;
+}
+.brd-title-center{
+  flex:1;display:flex;align-items:baseline;justify-content:center;gap:5px;
+}
+.brd-main-title{
+  font-family:-apple-system,Roboto,sans-serif;
+  font-size:15px;font-weight:700;
+  color:var(--brd-text,#111);cursor:pointer;
+}
+.brd-ver-dot{color:var(--brd-num,#AAA);font-size:13px}
+.brd-ver-label{
+  font-size:12px;font-weight:600;
+  color:var(--brd-num,#AAA);cursor:pointer;
+}
+.brd-right-btns{display:flex;align-items:center;gap:2px}
+.brd-icon-btn{
+  width:32px;height:32px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:var(--brd-text,#333);
+  transition:background .12s;
+}
+.brd-icon-btn:active{background:var(--brd-border,#eee)}
+.brd-more-btn{font-size:19px;font-weight:700;letter-spacing:1px;padding-bottom:2px}
+
+/* Search bar */
+.brd-search-bar{
+  background:var(--brd-bar,#F5F5F5);
+  border-bottom:1px solid var(--brd-border,#E8E8E8);
+  padding:6px 14px;flex-shrink:0;
+}
+.brd-search-inner{
+  display:flex;align-items:center;gap:8px;
+  background:var(--brd-bg,#FFF);
+  border:1px solid var(--brd-border,#ddd);
+  border-radius:10px;padding:6px 10px;
+}
+.brd-search-inner input{
+  flex:1;border:none;outline:none;
+  font-family:-apple-system,Roboto,sans-serif;
+  font-size:12px;color:var(--brd-text,#333);
+  background:transparent;
+}
+.brd-search-inner input::placeholder{color:var(--brd-num,#aaa)}
+
+/* Chapter scroll nav */
+.brd-ch-nav{
+  display:flex;align-items:center;
+  background:var(--brd-bar,#F5F5F5);
+  border-bottom:1px solid var(--brd-border,#E8E8E8);
+  padding:4px 8px;flex-shrink:0;gap:4px;
+}
+.brd-nav-arr{
+  width:28px;height:28px;border-radius:7px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:var(--brd-text,#333);flex-shrink:0;
+  transition:background .12s;
+}
+.brd-nav-arr:active{background:var(--brd-border,#eee)}
+.brd-ch-scroll{
+  flex:1;display:flex;gap:4px;
+  overflow-x:auto;-webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+}
+.brd-ch-scroll::-webkit-scrollbar{display:none}
+.brd-ch-btn{
+  flex-shrink:0;min-width:24px;height:24px;
+  padding:0 5px;border-radius:6px;
+  background:transparent;
+  font-family:-apple-system,Roboto,sans-serif;
+  font-size:11px;font-weight:600;
+  color:var(--brd-text2,#555);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .12s;position:relative;
+}
+.brd-ch-btn.active{
+  background:var(--brd-chip-sel,#1B3A6B);
+  color:var(--brd-chip-sel-text,white);
+  font-weight:700;
+}
+.brd-ch-btn.has-note::after{
+  content:'';position:absolute;top:2px;right:2px;
+  width:4px;height:4px;background:#D4B45A;
+  border-radius:50%;
+}
+
+/* Reading area */
+.brd-reading{
+  flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;
+  padding:16px 18px 20px;
+  background:var(--brd-bg,#FFF);
+}
+.brd-reading::-webkit-scrollbar{display:none}
+
+/* Passage text */
+#brd-passage{
+  font-family:var(--brd-font,-apple-system,Roboto,sans-serif);
+  font-size:var(--brd-fsize,13px);
+  color:var(--brd-text,#111);
+  line-height:var(--brd-lh,1.35);
+  text-align:var(--brd-align,left);
+}
+/* Chapter title */
+#brd-passage .brd-ch-title{
+  font-size:calc(var(--brd-fsize,13px) * 1.3);
+  font-weight:700;color:var(--brd-text,#111);
+  margin:0 0 14px;
+}
+/* Section subtitle */
+#brd-passage .brd-sub-title{
+  font-size:calc(var(--brd-fsize,13px) * 1.1);
+  font-weight:700;color:var(--brd-text,#111);
+  margin:14px 0 6px;
+}
+/* Verse block — separate mode */
+#brd-passage .brd-v{
+  display:flex;gap:5px;margin-bottom:6px;
+}
+/* Verse block — continuous mode */
+#brd-passage.brd-continuous .brd-v{
+  display:inline;
+}
+/* Verse number */
+#brd-passage .brd-vnum{
+  font-size:9px;font-weight:700;
+  color:var(--brd-num,#AAA);
+  line-height:1.8;flex-shrink:0;
+  cursor:pointer;min-width:14px;
+}
+#brd-passage.brd-continuous .brd-vnum{
+  font-size:8px;vertical-align:super;
+  line-height:1;margin-right:1px;
+}
+/* Verse text */
+#brd-passage .brd-vt{
+  cursor:pointer;flex:1;
+  transition:background .12s;border-radius:3px;
+}
+#brd-passage .brd-vt:active{background:rgba(0,0,0,.04)}
+/* Highlights */
+#brd-passage .brd-vt.hl-yellow{background:#FFF9C4}
+#brd-passage .brd-vt.hl-green{background:#DCEDC8}
+#brd-passage .brd-vt.hl-blue{background:#BBDEFB}
+#brd-passage .brd-vt.hl-pink{background:#FFDDE1}
+#brd-passage .brd-vt.hl-purple{background:#E1BEE7}
+/* Search highlight */
+#brd-passage .brd-search-hl{background:#FFE082;border-radius:2px}
+
+/* Verse context menu */
+.brd-vctx{
+  position:absolute;
+  background:white;border-radius:12px;
+  box-shadow:0 4px 20px rgba(0,0,0,.15);
+  border:1px solid #eee;
+  z-index:200;min-width:180px;
+  overflow:hidden;
+}
+.brd-hl-dot{
+  width:22px;height:22px;border-radius:50%;cursor:pointer;
+  border:2px solid transparent;transition:transform .1s;
+}
+.brd-hl-dot:active{transform:scale(.85)}
+.brd-hl-dot.sel{border-color:#333}
+.brd-vctx-btn{
+  padding:11px 14px;font-size:12px;font-weight:600;
+  color:#333;cursor:pointer;
+  border-top:1px solid #f5f5f5;
+  transition:background .1s;
+}
+.brd-vctx-btn:active{background:#f9f9f9}
+
+/* Bottom sheets (settings + history) */
+.brd-sheet{
+  position:absolute;bottom:0;left:0;right:0;
+  background:white;border-radius:18px 18px 0 0;
+  box-shadow:0 -4px 24px rgba(0,0,0,.12);
+  z-index:300;max-height:80%;
+  display:flex;flex-direction:column;
+  transform:translateY(100%);
+  transition:transform .32s cubic-bezier(.4,0,.2,1);
+}
+.brd-sheet.open{transform:translateY(0)}
+.brd-sheet-handle{
+  width:36px;height:4px;background:#ddd;
+  border-radius:2px;margin:10px auto 4px;flex-shrink:0;
+}
+.brd-sheet-title{
+  font-size:14px;font-weight:800;color:#222;
+  padding:4px 16px 10px;flex-shrink:0;
+  border-bottom:1px solid #f0f0f0;
+}
+.brd-sheet-body{
+  overflow-y:auto;padding:12px 16px 30px;
+  -webkit-overflow-scrolling:touch;
+}
+.brd-sheet-body::-webkit-scrollbar{display:none}
+.brd-s-lbl{
+  font-size:9px;font-weight:800;letter-spacing:.15em;
+  text-transform:uppercase;color:#aaa;
+  margin:12px 0 6px;
+}
+.brd-s-row{display:flex;gap:7px;flex-wrap:wrap}
+.brd-s-chip{
+  padding:6px 13px;border-radius:20px;
+  font-size:11px;font-weight:700;cursor:pointer;
+  background:#F0F0F0;color:#444;
+  border:2px solid transparent;
+  transition:all .12s;
+}
+.brd-s-chip:active{background:#e0e0e0}
+.brd-s-chip.sel{background:#1B3A6B;color:white;border-color:#1B3A6B}
+
+/* History list items */
+.brd-hist-item{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 0;border-bottom:1px solid #f5f5f5;
+  cursor:pointer;
+}
+.brd-hist-item:active{opacity:.7}
+.brd-hist-ico{
+  width:34px;height:34px;border-radius:9px;
+  background:#EEF2FA;display:flex;align-items:center;
+  justify-content:center;font-size:15px;flex-shrink:0;
+}
+.brd-hist-info{flex:1}
+.brd-hist-book{font-size:12px;font-weight:700;color:#222}
+.brd-hist-ch{font-size:10px;color:#888;margin-top:1px}
+/* ══════ RÉVISION ══════ */
+.rev-tab{flex:1;padding:7px;border-radius:10px;font-size:10px;font-weight:800;text-align:center;cursor:pointer;background:var(--surface);color:var(--text-soft);border:1.5px solid var(--border);transition:all .2s}
+.rev-tab.active{background:var(--royal);color:white;border-color:var(--royal);box-shadow:0 3px 10px rgba(27,58,107,.28)}
+.rv-field-lbl{font-size:9px;font-weight:800;letter-spacing:.15em;text-transform:uppercase;color:var(--text-soft);margin-bottom:7px}
+.rv-ver{padding:5px 12px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;background:var(--bg);color:var(--text-soft);border:1.5px solid var(--border);transition:all .15s}
+.rv-ver.active{background:var(--royal);color:white;border-color:var(--royal)}
+.rv-ex-card-full{background:var(--card);border-radius:13px;padding:12px 13px;display:flex;align-items:center;gap:12px;box-shadow:0 2px 8px var(--shadow);cursor:pointer;transition:transform .15s,background .2s;border:1.5px solid var(--border)}
+.rv-ex-card-full:active{transform:scale(.97)}
+.rv-verse-card{background:var(--card);border-radius:13px;padding:8px 10px 8px 12px;margin-bottom:6px;box-shadow:0 2px 8px var(--shadow);border-left:4px solid var(--gold);transition:background .3s;display:flex;align-items:center;gap:8px;position:relative;overflow:hidden}
+.rv-verse-ref{font-size:11px;font-weight:800;color:var(--royal);margin-bottom:5px}
+[data-theme="dark"] .rv-verse-ref{color:var(--gold-light)}
+.rv-verse-text{font-size:12px;color:var(--text);line-height:1.5;font-weight:500}
+.rv-badge{display:inline-flex;align-items:center;font-size:8px;font-weight:800;border-radius:20px;padding:2px 9px;margin-top:7px}
+.rv-badge-late{background:rgba(255,55,95,.12);color:#B71C1C}
+.rv-badge-today{background:rgba(255,214,10,.15);color:#B8860B}
+.rv-badge-upcoming{background:rgba(48,209,88,.12);color:#1B5E20}
+.rv-badge-done{background:rgba(100,100,100,.1);color:var(--text-soft)}
+/* Exercices */
+.rv-ex-btn{border-radius:12px;padding:13px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;font-weight:800;transition:opacity .15s;margin-top:10px}
+.rv-ex-btn:active{opacity:.8}
+.rv-ex-correct{background:linear-gradient(135deg,#1B5E20,#2E7D32);color:white}
+.rv-ex-wrong{background:linear-gradient(135deg,#B71C1C,#EF5350);color:white}
+.rv-ex-input{width:100%;background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.12);border-radius:12px;padding:12px 14px;color:white;font-family:'Nunito',sans-serif;font-size:14px;outline:none;min-height:100px;resize:none;line-height:1.6}
+.rv-ex-input::placeholder{color:rgba(255,255,255,.3)}
+.rv-flip-card{perspective:600px;cursor:pointer;width:100%;margin-bottom:20px}
+.rv-flip-inner{width:100%;min-height:190px;position:relative;transition:transform .5s;transform-style:preserve-3d}
+.rv-flip-inner.flipped{transform:rotateY(180deg)}
+.rv-flip-face{position:absolute;width:100%;min-height:190px;backface-visibility:hidden;background:#1A2845;border-radius:18px;padding:24px;display:flex;flex-direction:column;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.08)}
+.rv-flip-back{transform:rotateY(180deg);background:#152238}
+</style>
+</head>
+<body>
+<div class="phone-wrapper"><div class="iphone">
+<div class="island"></div>
+<div class="screen">
+
+<!-- ════ ACCUEIL ════ -->
+<div class="view" id="view-home">
+  <div class="status-bar" style="background:var(--royal-mid)"><div class="s-time">9:41</div><div style="display:flex;align-items:center;gap:4px"><svg width="24" height="12" viewBox="0 0 26 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" stroke="white" fill="none"/><rect x="1.5" y="1.5" width="18" height="10" rx="2.5" fill="white"/><path d="M23.5 4.5v4a2 2 0 000-4z" fill="white"/></svg></div></div>
+  <div class="home-hero">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
+      <div><div class="welcome-label">✦ Bienvenu</div><div class="welcome-title">Shalom, <span id="user-name" style="color:var(--gold-light);cursor:pointer" onclick="editName()">Thomas</span></div></div>
+      <div class="dark-toggle" id="dark-toggle-btn" onclick="toggleDark()">🌙</div>
+    </div>
+    <div class="revision-block">
+      <div class="rev-head"><div class="rev-lbl">📖 Révision du jour</div><div class="rev-counter" id="rev-counter">1 / 3</div></div>
+      <div class="rev-carousel"><div class="rev-track" id="rev-track">
+        <div class="rev-slide"><div class="rev-verse">« Je puis tout par celui qui me fortifie. »</div><div class="rev-ref">Philippiens 4:13</div><div class="rev-tag">🔥 J+7</div></div>
+        <div class="rev-slide"><div class="rev-verse">« L'Éternel est mon berger : je ne manquerai de rien. »</div><div class="rev-ref">Psaume 23:1</div><div class="rev-tag">⏳ J+3</div></div>
+        <div class="rev-slide"><div class="rev-verse">« Il n'y a donc aucune condamnation pour ceux qui sont en Jésus-Christ. »</div><div class="rev-ref">Romains 8:1</div><div class="rev-tag">✨ J+1</div></div>
+      </div></div>
+      <div class="rev-controls"><div class="rev-dots" id="rev-dots"><div class="rev-dot active"></div><div class="rev-dot"></div><div class="rev-dot"></div></div><div class="rev-arrows"><div class="rev-arrow" onclick="revMove(-1)"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></div><div class="rev-arrow" onclick="revMove(1)"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div></div></div>
+    </div>
+  </div>
+  <div class="home-body">
+    <div class="icon-grid">
+      <div class="icon-item" onclick="go('view-home','view-books')"><div class="icon-svg-box"><svg viewBox="0 0 28 28" fill="none"><rect x="5" y="3" width="14" height="19" rx="2.5" stroke="#1B3A6B" stroke-width="1.6"/><line x1="8" y1="8" x2="16" y2="8" stroke="#D4B45A" stroke-width="1.5" stroke-linecap="round"/><line x1="8" y1="11.5" x2="16" y2="11.5" stroke="#D4B45A" stroke-width="1.5" stroke-linecap="round"/><line x1="8" y1="15" x2="13" y2="15" stroke="#D4B45A" stroke-width="1.5" stroke-linecap="round"/><circle cx="20" cy="20" r="5" fill="#E8F5E9" stroke="#2E7D32" stroke-width="1.5"/><line x1="20" y1="17.5" x2="20" y2="20" stroke="#2E7D32" stroke-width="1.5" stroke-linecap="round"/><circle cx="20" cy="21.5" r=".8" fill="#2E7D32"/></svg></div><div class="icon-lbl">Médi&shy;tations</div></div>
+      <div class="icon-item" onclick="go('view-home','view-bible')"><div class="icon-svg-box"><svg viewBox="0 0 28 28" fill="none"><rect x="5" y="3" width="18" height="22" rx="2.5" fill="#EEF2FA" stroke="#1B3A6B" stroke-width="1.6"/><line x1="5" y1="3" x2="5" y2="25" stroke="#D4B45A" stroke-width="2.5" stroke-linecap="round"/><line x1="10" y1="9" x2="19" y2="9" stroke="#1B3A6B" stroke-width="1.3" stroke-linecap="round"/><line x1="10" y1="12" x2="19" y2="12" stroke="#1B3A6B" stroke-width="1.3" stroke-linecap="round"/><line x1="10" y1="15" x2="16" y2="15" stroke="#1B3A6B" stroke-width="1.3" stroke-linecap="round"/><line x1="14" y1="6" x2="14" y2="7.5" stroke="#B71C1C" stroke-width="1.5" stroke-linecap="round"/><line x1="11.5" y1="6.75" x2="16.5" y2="6.75" stroke="#B71C1C" stroke-width="1.5" stroke-linecap="round"/></svg></div><div class="icon-lbl">Bible</div></div>
+      <div class="icon-item" onclick="go('view-home','view-revision')"><div class="icon-svg-box"><svg viewBox="0 0 28 28" fill="none"><path d="M6 14a8 8 0 1 1 2.3 5.6" stroke="#1B3A6B" stroke-width="1.7" stroke-linecap="round"/><polyline points="6,18 6,14 10,14" stroke="#1B3A6B" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><line x1="14" y1="10" x2="14" y2="14" stroke="#D4B45A" stroke-width="1.6" stroke-linecap="round"/><line x1="14" y1="14" x2="17" y2="16" stroke="#D4B45A" stroke-width="1.6" stroke-linecap="round"/></svg></div><div class="icon-lbl">Révision</div></div>      <div class="icon-item" onclick="go('view-home','view-songes')"><div class="icon-svg-box"><svg viewBox="0 0 28 28" fill="none"><path d="M14 4c-1 0-2 .5-2.5 1.5C8 6.5 6 9 6 12c0 4 3.5 7 8 7s8-3 8-7c0-3-2-5.5-5.5-6.5C16 5 15.5 4 14 4z" fill="#E8EEF8" stroke="#1B3A6B" stroke-width="1.5"/><path d="M10 19v2a2 2 0 0 0 4 0v-2" stroke="#1B3A6B" stroke-width="1.5" stroke-linecap="round"/><line x1="14" y1="8" x2="14" y2="13" stroke="#D4B45A" stroke-width="1.5" stroke-linecap="round"/></svg></div><div class="icon-lbl">Songes</div></div>
+      <div class="icon-item" onclick="go('view-home','view-culte')"><div class="icon-svg-box"><svg viewBox="0 0 28 28" fill="none"><rect x="4" y="7" width="20" height="17" rx="3" fill="#EEF2FA" stroke="#1B3A6B" stroke-width="1.5"/><line x1="4" y1="12" x2="24" y2="12" stroke="#1B3A6B" stroke-width="1.4"/><line x1="9" y1="5" x2="9" y2="9" stroke="#1B3A6B" stroke-width="1.6" stroke-linecap="round"/><line x1="19" y1="5" x2="19" y2="9" stroke="#1B3A6B" stroke-width="1.6" stroke-linecap="round"/><rect x="7" y="15" width="5" height="4" rx="1" fill="#D4B45A"/><rect x="16" y="15" width="5" height="4" rx="1" fill="#E8EEF8" stroke="#1B3A6B" stroke-width="1"/></svg></div><div class="icon-lbl">Culte</div></div>
+      <div class="icon-item" onclick="go('view-home','view-enseignements')"><div class="icon-svg-box"><svg viewBox="0 0 28 28" fill="none"><rect x="3" y="6" width="22" height="14" rx="2.5" fill="#EEF2FA" stroke="#1B3A6B" stroke-width="1.5"/><line x1="7" y1="11" x2="21" y2="11" stroke="#D4B45A" stroke-width="1.4" stroke-linecap="round"/><line x1="7" y1="14" x2="18" y2="14" stroke="#1B3A6B" stroke-width="1.2" stroke-linecap="round"/><line x1="14" y1="20" x2="14" y2="24" stroke="#1B3A6B" stroke-width="1.5" stroke-linecap="round"/><line x1="11" y1="20" x2="17" y2="20" stroke="#1B3A6B" stroke-width="1.5" stroke-linecap="round"/></svg></div><div class="icon-lbl">Enseigne&shy;ments</div></div>
+      <div class="icon-item"><div class="icon-svg-box"><svg viewBox="0 0 28 28" fill="none"><path d="M14 22s-9-5.5-9-11a5 5 0 0 1 10 0 5 5 0 0 1 10 0c0 5.5-9 11-9 11z" fill="#FDE8E8" stroke="#B71C1C" stroke-width="1.5" stroke-linejoin="round"/><line x1="14" y1="9" x2="14" y2="14" stroke="#B71C1C" stroke-width="1.4" stroke-linecap="round"/><line x1="11.5" y1="11.5" x2="16.5" y2="11.5" stroke="#B71C1C" stroke-width="1.4" stroke-linecap="round"/></svg></div><div class="icon-lbl">Favoris</div></div>
+      <div class="icon-item" onclick="go('view-home','view-menu')"><div class="icon-svg-box"><svg viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="3" stroke="#1B3A6B" stroke-width="1.5"/><path d="M14 5v2M14 21v2M5 14H3M25 14h-2M7.1 7.1l1.4 1.4M19.5 19.5l1.4 1.4M7.1 20.9l1.4-1.4M19.5 8.5l1.4-1.4" stroke="#1B3A6B" stroke-width="1.5" stroke-linecap="round"/></svg></div><div class="icon-lbl">Paramètres</div></div>
+    </div>
+    <div class="promo-banner"><div class="promo-title">Grandir avec la Parole chaque jour.</div><div class="promo-sub">Découvre ton chemin dans les Écritures</div></div>
+  </div>
+  <div class="bottom-nav">
+    <div class="ni active"><svg viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V21a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z" fill="var(--gold)" stroke="none"/></svg><div class="ni-lbl" style="color:var(--royal-mid)">Accueil</div></div>
+    <div class="ni" onclick="go('view-home','view-bible')"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6s1.5-2 5-2 5 2 5 2v14s-1.5-1-5-1-5 1-5 1V6z"/><path d="M12 6s1.5-2 5-2 5 2 5 2v14s-1.5-1-5-1-5 1-5 1V6z"/><line x1="12" y1="6" x2="12" y2="20"/><line x1="17" y1="4" x2="17" y2="6"/><line x1="15.5" y1="5" x2="18.5" y2="5"/></svg><div class="ni-lbl">Bible</div></div>
+    <div class="fab-c"><div class="fab" onclick="go('view-home','view-books')">+</div></div>
+    <div class="ni" onclick="go('view-home','view-books')"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21C12 21 4 15 4 9a4 4 0 0 1 8 0 4 4 0 0 1 8 0c0 6-8 12-8 12z"/><line x1="12" y1="5" x2="12" y2="3"/><line x1="8" y1="6" x2="6.5" y2="4.5"/><line x1="16" y1="6" x2="17.5" y2="4.5"/></svg><div class="ni-lbl">Méditations</div></div>
+    <div class="ni" onclick="go('view-home','view-menu')"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><div class="ni-lbl">Menu</div></div>
+  </div>
+</div>
+
+<!-- ════ BIBLE — MINIMALIST CLEAN READER ════ -->
+<div class="view hidden" id="view-bible">
+  <div class="status-bar" id="brd-status" style="background:#F5F5F5">
+    <div class="s-time" style="color:#333;font-size:12px">9:41</div>
+  </div>
+
+  <!-- Top bar -->
+  <div class="brd-topbar" id="brd-topbar">
+    <div class="brd-icon-btn" onclick="openBibleBookModal()">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+    </div>
+    <div class="brd-title-center">
+      <span id="brd-book-ch" class="brd-main-title" onclick="openBibleBookModal()">Hébreux 13</span>
+      <span class="brd-ver-dot">·</span>
+      <span id="brd-version" class="brd-ver-label" onclick="openVersionModal()">LSG</span>
+    </div>
+    <div class="brd-right-btns">
+      <div class="brd-icon-btn" onclick="toggleBibleSearch()">
+        <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </div>
+      <div class="brd-icon-btn" onclick="openHistoryPanel()">
+        <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v4l3 3m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg>
+      </div>
+      <div class="brd-icon-btn brd-more-btn" onclick="openBibleSettings()">⋮</div>
+    </div>
+  </div>
+
+  <!-- Search bar (hidden) -->
+  <div class="brd-search-bar hidden" id="brd-search-bar">
+    <div class="brd-search-inner">
+      <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="#aaa" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="brd-search-input" placeholder="Rechercher dans ce chapitre…" oninput="bibleSearch(this.value)">
+      <span onclick="closeBibleSearch()" style="color:#aaa;cursor:pointer;font-size:13px;font-weight:700">✕</span>
+    </div>
+  </div>
+
+  <!-- Chapter nav + passage -->
+  <div class="brd-ch-nav">
+    <div class="brd-nav-arr" onclick="prevChapter()">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+    </div>
+    <div class="brd-ch-scroll" id="brd-ch-scroll"></div>
+    <div class="brd-nav-arr" onclick="nextChapter()">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </div>
+  </div>
+
+  <!-- Reading area -->
+  <div class="brd-reading" id="brd-reading">
+    <div id="brd-passage"></div>
+  </div>
+
+  <!-- Verse context menu -->
+  <div class="brd-vctx hidden" id="brd-vctx">
+    <div style="padding:8px 14px 6px;border-bottom:1px solid #eee">
+      <div style="font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#aaa;margin-bottom:8px">Surlignage</div>
+      <div style="display:flex;gap:8px">
+        <div class="brd-hl-dot" style="background:#FFD700" onclick="hlVerse('yellow',this)"></div>
+        <div class="brd-hl-dot" style="background:#A8D8A0" onclick="hlVerse('green',this)"></div>
+        <div class="brd-hl-dot" style="background:#A0C4FF" onclick="hlVerse('blue',this)"></div>
+        <div class="brd-hl-dot" style="background:#FFB3BA" onclick="hlVerse('pink',this)"></div>
+        <div class="brd-hl-dot" style="background:#DDB3FF" onclick="hlVerse('purple',this)"></div>
+        <div class="brd-hl-dot" style="background:#eee;color:#999;font-size:10px;display:flex;align-items:center;justify-content:center" onclick="hlVerse('none',this)">✕</div>
+      </div>
+    </div>
+    <div class="brd-vctx-btn" onclick="addFav()">❤️ Ajouter aux favoris</div>
+    <div class="brd-vctx-btn" onclick="addRev()">🔄 Ajouter à réviser</div>
+    <div class="brd-vctx-btn" style="color:#aaa;font-size:11px" onclick="closeVCtx()">Fermer</div>
+  </div>
+
+  <!-- Settings panel (bottom sheet) -->
+  <div class="brd-sheet hidden" id="brd-settings">
+    <div class="brd-sheet-handle"></div>
+    <div class="brd-sheet-title">Personnalisation</div>
+    <div class="brd-sheet-body">
+      <div class="brd-s-lbl">Thème</div>
+      <div class="brd-s-row">
+        <div class="brd-s-chip sel" id="sc-auto" onclick="setBibleTheme('auto',this)">Auto</div>
+        <div class="brd-s-chip" id="sc-day" onclick="setBibleTheme('day',this)">☀️ Jour</div>
+        <div class="brd-s-chip" id="sc-night" onclick="setBibleTheme('night',this)">🌙 Nuit</div>
+        <div class="brd-s-chip" id="sc-sepia" onclick="setBibleTheme('sepia',this)">📜 Sépia</div>
+      </div>
+      <div class="brd-s-lbl">Taille du texte</div>
+      <div class="brd-s-row" style="align-items:center;gap:14px">
+        <div class="brd-s-chip" onclick="changeFontSize(-1)">A−</div>
+        <div id="brd-fslbl" style="font-size:12px;font-weight:700;color:#333;min-width:36px;text-align:center">100%</div>
+        <div class="brd-s-chip" onclick="changeFontSize(1)">A+</div>
+      </div>
+      <div class="brd-s-lbl">Police</div>
+      <div class="brd-s-row" style="flex-wrap:wrap;gap:6px">
+        <div class="brd-s-chip sel" id="sf-sys" onclick="setBibleFont('-apple-system,Roboto,sans-serif',this)">SF / Roboto</div>
+        <div class="brd-s-chip" id="sf-geo" onclick="setBibleFont('Georgia,serif',this)">Georgia</div>
+        <div class="brd-s-chip" id="sf-ari" onclick="setBibleFont('Arial,sans-serif',this)">Arial</div>
+        <div class="brd-s-chip" id="sf-tim" onclick="setBibleFont('Times New Roman,serif',this)">Times</div>
+      </div>
+      <div class="brd-s-lbl">Alignement</div>
+      <div class="brd-s-row">
+        <div class="brd-s-chip sel" id="sa-left" onclick="setBibleAlign('left',this)">Gauche</div>
+        <div class="brd-s-chip" id="sa-center" onclick="setBibleAlign('center',this)">Centré</div>
+        <div class="brd-s-chip" id="sa-justify" onclick="setBibleAlign('justify',this)">Justifié</div>
+      </div>
+      <div class="brd-s-lbl">Interligne</div>
+      <div class="brd-s-row">
+        <div class="brd-s-chip sel" id="sl-normal" onclick="setBibleLineH('1.35',this)">Normal</div>
+        <div class="brd-s-chip" id="sl-wide" onclick="setBibleLineH('1.7',this)">Élargi</div>
+      </div>
+      <div class="brd-s-lbl">Mode des versets</div>
+      <div class="brd-s-row">
+        <div class="brd-s-chip sel" id="sv-sep" onclick="setBibleVerseMode('separate',this)">Séparé</div>
+        <div class="brd-s-chip" id="sv-cont" onclick="setBibleVerseMode('continuous',this)">Continu</div>
+      </div>
+      <div class="brd-s-lbl">Version biblique</div>
+      <div id="brd-s-ver"></div>
+    </div>
+  </div>
+
+  <!-- History panel (bottom sheet) -->
+  <div class="brd-sheet hidden" id="brd-history">
+    <div class="brd-sheet-handle"></div>
+    <div class="brd-sheet-title">📖 Derniers livres lus</div>
+    <div class="brd-sheet-body" id="brd-history-list"></div>
+  </div>
+
+  <!-- Book modal -->
+  <div class="bible-book-modal" id="bible-book-modal">
+    <div class="bbm-handle-row">
+      <div class="bbm-handle"></div>
+      <div class="bbm-h-title">Livres</div>
+      <div class="bbm-h-more" onclick="closeBibleBookModal()">✕</div>
+    </div>
+    <div class="bbm-scroll" id="bbm-scroll"></div>
+  </div>
+
+  <!-- Version modal -->
+  <div class="version-modal" id="version-modal">
+    <div class="vm-handle"></div>
+    <div class="vm-title">Choisir une version</div>
+    <div class="vm-list" id="vm-list"></div>
+  </div>
+
+  <!-- Bottom nav -->
+  <div class="bottom-nav" id="bible-bottom-nav-el">
+    <div class="ni" onclick="go('view-bible','view-home')"><svg viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V21a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/></svg><div class="ni-lbl">Accueil</div></div>
+    <div class="ni active"><svg viewBox="0 0 24 24" style="stroke:var(--gold)"><rect x="4" y="3" width="13" height="18" rx="2"/><line x1="4" y1="3" x2="4" y2="21"/></svg><div class="ni-lbl" style="color:var(--royal-mid)">Bible</div></div>
+    <div class="fab-c"><div class="fab">+</div></div>
+    <div class="ni" onclick="go('view-bible','view-books')"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21C12 21 4 15 4 9a4 4 0 0 1 8 0 4 4 0 0 1 8 0c0 6-8 12-8 12z"/><line x1="12" y1="5" x2="12" y2="3"/><line x1="8" y1="6" x2="6.5" y2="4.5"/><line x1="16" y1="6" x2="17.5" y2="4.5"/></svg><div class="ni-lbl">Méditations</div></div>
+    <div class="ni" onclick="go('view-bible','view-menu')"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><div class="ni-lbl">Menu</div></div>
+  </div>
+</div>
+
+<!-- ════ RÉVISION ════ -->
+<div class="view hidden" id="view-revision">
+  <div class="status-bar" style="background:var(--royal)"><div class="s-time">9:41</div></div>
+
+  <!-- Hero -->
+  <div style="background:linear-gradient(160deg,#1B3A6B 0%,#2A52A0 100%);padding:6px 18px 16px;flex-shrink:0;border-radius:0 0 22px 22px;position:relative;overflow:hidden">
+    <div style="display:flex;align-items:center;gap:9px;margin-bottom:8px">
+      <div class="back-btn" onclick="go('view-revision','view-home')"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></div>
+      <div style="font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)">🔄 Mémorisation</div>
+    </div>
+    <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:white;margin-bottom:12px">Révision de Versets</div>
+    <!-- Rappels pills -->
+    <div style="display:flex;gap:7px">
+      <div id="rev-pill-late" onclick="revSetFilter('late')" style="background:rgba(255,55,95,.25);border:1px solid rgba(255,55,95,.4);border-radius:20px;padding:5px 11px;display:flex;align-items:center;gap:5px;cursor:pointer">
+        <span id="rev-count-late" style="font-size:14px;font-weight:900;color:#FF6B8A">0</span>
+        <span style="font-size:9px;font-weight:700;color:rgba(255,255,255,.8)">En retard</span>
+      </div>
+      <div id="rev-pill-today" onclick="revSetFilter('today')" style="background:rgba(255,214,10,.2);border:1px solid rgba(255,214,10,.35);border-radius:20px;padding:5px 11px;display:flex;align-items:center;gap:5px;cursor:pointer">
+        <span id="rev-count-today" style="font-size:14px;font-weight:900;color:#FFD60A">0</span>
+        <span style="font-size:9px;font-weight:700;color:rgba(255,255,255,.8)">Aujourd'hui</span>
+      </div>
+      <div id="rev-pill-upcoming" onclick="revSetFilter('upcoming')" style="background:rgba(48,209,88,.15);border:1px solid rgba(48,209,88,.3);border-radius:20px;padding:5px 11px;display:flex;align-items:center;gap:5px;cursor:pointer">
+        <span id="rev-count-upcoming" style="font-size:14px;font-weight:900;color:#30D158">0</span>
+        <span style="font-size:9px;font-weight:700;color:rgba(255,255,255,.8)">À venir</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabs : Mes versets en premier + bouton + -->
+  <div style="display:flex;align-items:center;gap:7px;padding:10px 16px 4px;flex-shrink:0">
+    <div class="rev-tab active" id="rtab-list" onclick="revSwitchTab('list')" style="flex:1">📋 Mes versets</div>
+    <div class="rev-tab" id="rtab-ex" onclick="revSwitchTab('ex')" style="flex:1">🎯 Exercices</div>
+    <div onclick="rvOpenAdd()" style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--royal),var(--royal-mid));display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 3px 10px rgba(27,58,107,.35);flex-shrink:0">
+      <svg viewBox="0 0 24 24" width="18" height="18" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    </div>
+  </div>
+
+  <!-- Panel : Mes versets (visible par défaut) -->
+  <div id="rev-panel-list" style="flex:1;overflow-y:auto;padding:8px 16px 90px;-webkit-overflow-scrolling:touch">
+    <div id="rev-verse-list"></div>
+  </div>
+
+  <!-- Panel : Exercices (caché par défaut) -->
+  <div id="rev-panel-ex" class="hidden" style="flex:1;overflow-y:auto;padding:12px 16px 90px;-webkit-overflow-scrolling:touch">
+
+    <!-- Sélecteur de verset -->
+    <div onclick="rvOpenPick()" style="background:var(--card);border-radius:12px;padding:11px 14px;box-shadow:0 2px 8px var(--shadow);cursor:pointer;border:1.5px solid var(--border);margin-bottom:16px;display:flex;align-items:center;gap:10px;transition:background .3s">
+      <span style="font-size:18px">📖</span>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-soft);margin-bottom:2px">Verset sélectionné</div>
+        <div id="rv-ex-pick-lbl" style="font-size:12px;font-weight:700;color:var(--text-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Appuie pour choisir…</div>
+      </div>
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--text-faint)" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+
+    <!-- 4 cartes exercices -->
+    <div style="display:flex;flex-direction:column;gap:9px">
+      <div class="rv-ex-card-full" onclick="rvStartEx('flashcard')">
+        <div style="width:42px;height:42px;border-radius:12px;background:rgba(27,58,107,.1);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">🃏</div>
+        <div style="flex:1"><div style="font-size:13px;font-weight:800;color:var(--text)">Flashcard</div><div style="font-size:10px;color:var(--text-soft);margin-top:2px">Voir la référence, deviner le verset</div></div>
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--text-faint)" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+      <div class="rv-ex-card-full" onclick="rvStartEx('blanks')">
+        <div style="width:42px;height:42px;border-radius:12px;background:rgba(212,180,90,.1);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">✏️</div>
+        <div style="flex:1"><div style="font-size:13px;font-weight:800;color:var(--text)">Mots manquants</div><div style="font-size:10px;color:var(--text-soft);margin-top:2px">Compléter les blancs du verset</div></div>
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--text-faint)" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+      <div class="rv-ex-card-full" onclick="rvStartEx('rewrite')">
+        <div style="width:42px;height:42px;border-radius:12px;background:rgba(46,125,50,.1);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">📝</div>
+        <div style="flex:1"><div style="font-size:13px;font-weight:800;color:var(--text)">Recopier</div><div style="font-size:10px;color:var(--text-soft);margin-top:2px">Écrire le verset de mémoire</div></div>
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--text-faint)" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+      <div class="rv-ex-card-full" onclick="rvStartEx('read')">
+        <div style="width:42px;height:42px;border-radius:12px;background:rgba(103,58,183,.1);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">👁️</div>
+        <div style="flex:1"><div style="font-size:13px;font-weight:800;color:var(--text)">Lecture + Validation</div><div style="font-size:10px;color:var(--text-soft);margin-top:2px">Lire à voix haute et valider</div></div>
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--text-faint)" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal : pick verset -->
+  <div id="rv-pick-modal" style="display:none;position:absolute;inset:0;background:rgba(0,0,0,.5);z-index:400;flex-direction:column;justify-content:flex-end;border-radius:36px">
+    <div style="background:var(--surface);border-radius:20px 20px 0 0;padding:16px 16px 30px;max-height:65%;display:flex;flex-direction:column;transition:background .3s">
+      <div style="width:36px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 14px"></div>
+      <div style="font-size:14px;font-weight:800;color:var(--text);margin-bottom:10px">Choisir un verset</div>
+      <div id="rv-pick-list" style="overflow-y:auto;display:flex;flex-direction:column;gap:7px"></div>
+    </div>
+  </div>
+
+  <!-- Modal : ajouter un verset -->
+  <div id="rv-add-modal" style="display:none;position:absolute;inset:0;background:rgba(0,0,0,.5);z-index:400;flex-direction:column;justify-content:flex-end;border-radius:36px">
+    <div style="background:var(--surface);border-radius:20px 20px 0 0;padding:16px 16px 28px;transition:background .3s">
+      <div style="width:36px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 14px"></div>
+      <div style="font-size:14px;font-weight:800;color:var(--text);margin-bottom:12px">➕ Ajouter un verset</div>
+      <input id="rv-ref" type="text" placeholder="Référence (ex : Jean 3:16)" style="width:100%;border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;color:var(--text);background:var(--bg);outline:none;margin-bottom:8px;display:block;transition:background .3s,color .3s">
+      <textarea id="rv-text" placeholder="Texte du verset…" style="width:100%;border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;font-family:'Nunito',sans-serif;font-size:13px;color:var(--text);background:var(--bg);outline:none;min-height:75px;resize:none;line-height:1.5;display:block;margin-bottom:10px;transition:background .3s,color .3s"></textarea>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px">
+        <div class="rv-ver active" onclick="rvSelVer(this,'LSG')">LSG</div>
+        <div class="rv-ver" onclick="rvSelVer(this,'NEG')">NEG</div>
+        <div class="rv-ver" onclick="rvSelVer(this,'BDS')">BDS</div>
+        <div class="rv-ver" onclick="rvSelVer(this,'NBS')">NBS</div>
+        <div class="rv-ver" onclick="rvSelVer(this,'KJV')">KJV</div>
+      </div>
+      <div onclick="rvAddVerse()" style="background:linear-gradient(135deg,var(--royal),var(--royal-mid));border-radius:12px;padding:12px;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 14px rgba(27,58,107,.28)">
+        <span style="font-size:13px;font-weight:800;color:white">✅ Ajouter</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <div class="ni" onclick="go('view-revision','view-home')"><svg viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V21a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/></svg><div class="ni-lbl">Accueil</div></div>
+    <div class="ni" onclick="go('view-revision','view-bible')"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6s1.5-2 5-2 5 2 5 2v14s-1.5-1-5-1-5 1-5 1V6z"/><path d="M12 6s1.5-2 5-2 5 2 5 2v14s-1.5-1-5-1-5 1-5 1V6z"/><line x1="12" y1="6" x2="12" y2="20"/><line x1="17" y1="4" x2="17" y2="6"/><line x1="15.5" y1="5" x2="18.5" y2="5"/></svg><div class="ni-lbl">Bible</div></div>
+    <div class="fab-c"><div class="fab" onclick="revSwitchTab('add')">+</div></div>
+    <div class="ni" onclick="go('view-revision','view-books')"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21C12 21 4 15 4 9a4 4 0 0 1 8 0 4 4 0 0 1 8 0c0 6-8 12-8 12z"/><line x1="12" y1="5" x2="12" y2="3"/><line x1="8" y1="6" x2="6.5" y2="4.5"/><line x1="16" y1="6" x2="17.5" y2="4.5"/></svg><div class="ni-lbl">Méditations</div></div>
+    <div class="ni" onclick="go('view-revision','view-menu')"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><div class="ni-lbl">Menu</div></div>
+  </div>
+</div>
+
+<!-- ════ EXERCICE ════ -->
+<div class="view hidden" id="view-exercise" style="background:#0F1C2E">
+  <div class="status-bar" style="background:#0F1C2E"><div class="s-time" style="color:rgba(255,255,255,.8)">9:41</div></div>
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 16px 10px;background:#0F1C2E;flex-shrink:0">
+    <div class="back-btn" onclick="go('view-exercise','view-revision')"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></div>
+    <div id="rv-ex-title" style="font-size:13px;font-weight:800;color:white">Exercice</div>
+    <div id="rv-ex-ref" style="font-size:10px;font-weight:700;color:rgba(255,255,255,.4)"></div>
+  </div>
+  <div id="rv-ex-body" style="flex:1;display:flex;flex-direction:column;padding:16px;overflow-y:auto;-webkit-overflow-scrolling:touch;background:#0F1C2E"></div>
+</div>
+
+<!-- ════ LIVRES ════ -->
+<div class="view hidden" id="view-books">
+  <div class="status-bar" style="background:var(--royal-mid)"><div class="s-time">9:41</div></div>
+  <div class="books-hero"><div class="hero-top"><div><div class="hero-lbl">✦ Section</div><div class="hero-h1">Mes Méditations</div></div><div class="hero-av">🙏</div></div><div class="stats-row"><div class="stat-pill"><span class="sp-num">12</span><span class="sp-lbl">Méditées</span></div><div class="stat-pill"><span class="sp-num">3</span><span class="sp-lbl">Semaine</span></div><div class="stat-pill"><span class="sp-num">🔥5</span><span class="sp-lbl">Jours</span></div></div></div>
+  <div class="search-wrap"><div class="search-bar"><span style="font-size:14px">🔍</span><input type="text" placeholder="Rechercher un livre…" oninput="filterBooks(this.value)"></div></div>
+  <div class="tabs-row"><div class="tab active" onclick="switchTab(this,'AT')">Ancien Testament</div><div class="tab inactive" onclick="switchTab(this,'NT')">Nouveau Testament</div></div>
+  <div class="books-scroll" id="books-scroll"></div>
+  <div class="bottom-nav"><div class="ni" onclick="go('view-books','view-home')"><svg viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V21a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/></svg><div class="ni-lbl">Accueil</div></div><div class="ni" onclick="go('view-books','view-bible')"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6s1.5-2 5-2 5 2 5 2v14s-1.5-1-5-1-5 1-5 1V6z"/><path d="M12 6s1.5-2 5-2 5 2 5 2v14s-1.5-1-5-1-5 1-5 1V6z"/><line x1="12" y1="6" x2="12" y2="20"/><line x1="17" y1="4" x2="17" y2="6"/><line x1="15.5" y1="5" x2="18.5" y2="5"/></svg><div class="ni-lbl">Bible</div></div><div class="fab-c"><div class="fab">+</div></div><div class="ni active"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21C12 21 4 15 4 9a4 4 0 0 1 8 0 4 4 0 0 1 8 0c0 6-8 12-8 12z"/><line x1="12" y1="5" x2="12" y2="3"/><line x1="8" y1="6" x2="6.5" y2="4.5"/><line x1="16" y1="6" x2="17.5" y2="4.5"/></svg><div class="ni-lbl" style="color:var(--royal-mid)">Méditations</div></div><div class="ni" onclick="go('view-books','view-menu')"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><div class="ni-lbl">Menu</div></div></div>
+</div>
+
+<!-- ════ NOTEPAD ════ -->
+<div class="view hidden" id="view-notepad">
+  <div class="status-bar" style="background:var(--royal)"><div class="s-time">9:41</div></div>
+  <div class="np-hero">
+    <div class="np-nav"><div class="back-btn" onclick="go('view-notepad','view-books')"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></div><div class="np-nav-title">Méditations</div></div>
+    <div class="np-bk-hdr"><div class="np-bk-ico" id="np-icon">📖</div><div><div class="np-bk-name" id="np-name">Genèse</div><div class="np-bk-sub" id="np-sub">50 chapitres</div></div></div>
+  </div>
+  <div class="ch-sel"><div class="cs-lbl">Chapitre</div><div class="ch-scroll" id="ch-scroll"></div></div>
+  <div class="np-area" id="np-area"></div>
+  <div class="bottom-nav"><div class="ni" onclick="go('view-notepad','view-home')"><svg viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V21a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/></svg><div class="ni-lbl">Accueil</div></div><div class="ni" onclick="go('view-notepad','view-bible')"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6s1.5-2 5-2 5 2 5 2v14s-1.5-1-5-1-5 1-5 1V6z"/><path d="M12 6s1.5-2 5-2 5 2 5 2v14s-1.5-1-5-1-5 1-5 1V6z"/><line x1="12" y1="6" x2="12" y2="20"/><line x1="17" y1="4" x2="17" y2="6"/><line x1="15.5" y1="5" x2="18.5" y2="5"/></svg><div class="ni-lbl">Bible</div></div><div class="fab-c"><div class="fab">+</div></div><div class="ni active"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21C12 21 4 15 4 9a4 4 0 0 1 8 0 4 4 0 0 1 8 0c0 6-8 12-8 12z"/><line x1="12" y1="5" x2="12" y2="3"/><line x1="8" y1="6" x2="6.5" y2="4.5"/><line x1="16" y1="6" x2="17.5" y2="4.5"/></svg><div class="ni-lbl" style="color:var(--royal-mid)">Méditations</div></div><div class="ni" onclick="go('view-notepad','view-menu')"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><div class="ni-lbl">Menu</div></div></div>
+  <div class="saved-badge" id="saved-badge"><div class="sb-icon">✨</div><div class="sb-text">Méditation sauvegardée !</div><div class="sb-sub">Révision dans 1 jour</div></div>
+</div>
+
+<!-- ════ SONGES ════ -->
+<div class="view hidden" id="view-songes">
+  <div class="status-bar" style="background:var(--royal)"><div class="s-time">9:41</div></div>
+  <div class="page-hero"><div class="page-hero-nav"><div class="back-btn" onclick="go('view-songes','view-home')"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></div><div class="page-hero-lbl">✦ Révélations</div></div><div class="page-hero-h1">Songes & Prophéties</div></div>
+  <div class="sec-tabs"><div class="sec-tab active" id="sp-tab-0" onclick="switchSecTab('songes',0,'songe')">🌙 Songes</div><div class="sec-tab inactive" id="sp-tab-1" onclick="switchSecTab('songes',1,'prophetie')">✨ Prophéties</div></div>
+  <div class="sec-body" id="songes-body"></div>
+  <div class="sp-fab-wrap"><div class="sp-fab" id="songes-fab" onclick="toggleFabMenu('songes')"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></div>
+  <div class="fab-overlay" id="songes-overlay" onclick="closeFabMenu('songes')"><div class="fab-choice" onclick="event.stopPropagation();openGenEditor('songes','prophetie')"><div class="fab-choice-label">Nouvelle Prophétie</div><div class="fab-choice-btn" style="background:linear-gradient(135deg,var(--gold),var(--gold-light))">✨</div></div><div class="fab-choice" onclick="event.stopPropagation();openGenEditor('songes','songe')"><div class="fab-choice-label">Nouveau Songe</div><div class="fab-choice-btn" style="background:linear-gradient(135deg,#6A1B9A,#9C27B0)">🌙</div></div></div>
+  <div class="bottom-nav"><div class="ni" onclick="go('view-songes','view-home')"><svg viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V21a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/></svg><div class="ni-lbl">Accueil</div></div><div class="ni" onclick="go('view-songes','view-bible')"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6s1.5-2 5-2 5 2 5 2v14s-1.5-1-5-1-5 1-5 1V6z"/><path d="M12 6s1.5-2 5-2 5 2 5 2v14s-1.5-1-5-1-5 1-5 1V6z"/><line x1="12" y1="6" x2="12" y2="20"/><line x1="17" y1="4" x2="17" y2="6"/><line x1="15.5" y1="5" x2="18.5" y2="5"/></svg><div class="ni-lbl">Bible</div></div><div class="fab-c"><div class="fab" onclick="toggleFabMenu('songes')">+</div></div><div class="ni" onclick="go('view-songes','view-books')"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21C12 21 4 15 4 9a4 4 0 0 1 8 0 4 4 0 0 1 8 0c0 6-8 12-8 12z"/><line x1="12" y1="5" x2="12" y2="3"/><line x1="8" y1="6" x2="6.5" y2="4.5"/><line x1="16" y1="6" x2="17.5" y2="4.5"/></svg><div class="ni-lbl">Méditations</div></div><div class="ni" onclick="go('view-songes','view-menu')"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><div class="ni-lbl">Menu</div></div></div>
+</div>
+
+<!-- ════ CULTE ════ -->
+<div class="view hidden" id="view-culte">
+  <div class="status-bar" style="background:#0277BD"><div class="s-time">9:41</div></div>
+  <div class="page-hero" style="background:linear-gradient(160deg,#0277BD 0%,#01579B 100%)"><div class="page-hero-nav"><div class="back-btn" onclick="go('view-culte','view-home')"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></div><div class="page-hero-lbl">🎙️ Section</div></div><div class="page-hero-h1">Culte & Programme</div></div>
+  <div class="sec-tabs"><div class="sec-tab active" id="culte-tab-0" onclick="switchSecTab('culte',0,'culte')">🎶 Cultes</div><div class="sec-tab inactive" id="culte-tab-1" onclick="switchSecTab('culte',1,'programme')">📋 Programmes</div></div>
+  <div class="sec-body" id="culte-body"></div>
+  <div class="sp-fab-wrap"><div class="sp-fab" id="culte-fab" style="background:linear-gradient(135deg,#0277BD,#29B6F6)" onclick="toggleFabMenu('culte')"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></div>
+  <div class="fab-overlay" id="culte-overlay" onclick="closeFabMenu('culte')"><div class="fab-choice" onclick="event.stopPropagation();openGenEditor('culte','programme')"><div class="fab-choice-label">Nouveau Programme</div><div class="fab-choice-btn" style="background:linear-gradient(135deg,#2E7D32,#66BB6A)">📋</div></div><div class="fab-choice" onclick="event.stopPropagation();openGenEditor('culte','culte')"><div class="fab-choice-label">Nouveau Culte</div><div class="fab-choice-btn" style="background:linear-gradient(135deg,#0277BD,#29B6F6)">🎶</div></div></div>
+  <div class="bottom-nav"><div class="ni" onclick="go('view-culte','view-home')"><svg viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V21a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/></svg><div class="ni-lbl">Accueil</div></div><div class="ni" onclick="go('view-culte','view-bible')"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6s1.5-2 5-2 5 2 5 2v14s-1.5-1-5-1-5 1-5 1V6z"/><path d="M12 6s1.5-2 5-2 5 2 5 2v14s-1.5-1-5-1-5 1-5 1V6z"/><line x1="12" y1="6" x2="12" y2="20"/><line x1="17" y1="4" x2="17" y2="6"/><line x1="15.5" y1="5" x2="18.5" y2="5"/></svg><div class="ni-lbl">Bible</div></div><div class="fab-c"><div class="fab" onclick="toggleFabMenu('culte')">+</div></div><div class="ni" onclick="go('view-culte','view-books')"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21C12 21 4 15 4 9a4 4 0 0 1 8 0 4 4 0 0 1 8 0c0 6-8 12-8 12z"/><line x1="12" y1="5" x2="12" y2="3"/><line x1="8" y1="6" x2="6.5" y2="4.5"/><line x1="16" y1="6" x2="17.5" y2="4.5"/></svg><div class="ni-lbl">Méditations</div></div><div class="ni" onclick="go('view-culte','view-menu')"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><div class="ni-lbl">Menu</div></div></div>
+</div>
+
+<!-- ════ ENSEIGNEMENTS ════ -->
+<div class="view hidden" id="view-enseignements">
+  <div class="status-bar" style="background:#6A1B9A"><div class="s-time">9:41</div></div>
+  <div class="page-hero" style="background:linear-gradient(160deg,#6A1B9A 0%,#4A148C 100%)"><div class="page-hero-nav"><div class="back-btn" onclick="go('view-enseignements','view-home')"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></div><div class="page-hero-lbl">🎓 Section</div></div><div class="page-hero-h1">Mes Enseignements</div></div>
+  <div class="sec-tabs"><div class="sec-tab active" id="ens-tab-0" onclick="switchSecTab('enseignements',0,'theme-dev')">📚 Développés</div><div class="sec-tab inactive" id="ens-tab-1" onclick="switchSecTab('enseignements',1,'theme-ins')">💡 Inspirés</div></div>
+  <div class="sec-body" id="enseignements-body"></div>
+  <div class="sp-fab-wrap"><div class="sp-fab" id="enseignements-fab" style="background:linear-gradient(135deg,#6A1B9A,#AB47BC)" onclick="toggleFabMenu('enseignements')"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></div>
+  <div class="fab-overlay" id="enseignements-overlay" onclick="closeFabMenu('enseignements')"><div class="fab-choice" onclick="event.stopPropagation();openGenEditor('enseignements','theme-ins')"><div class="fab-choice-label">Thème inspiré</div><div class="fab-choice-btn" style="background:linear-gradient(135deg,#6A1B9A,#AB47BC)">💡</div></div><div class="fab-choice" onclick="event.stopPropagation();openGenEditor('enseignements','theme-dev')"><div class="fab-choice-label">Thème développé</div><div class="fab-choice-btn" style="background:linear-gradient(135deg,#B71C1C,#EF5350)">📚</div></div></div>
+  <div class="bottom-nav"><div class="ni" onclick="go('view-enseignements','view-home')"><svg viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V21a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/></svg><div class="ni-lbl">Accueil</div></div><div class="ni" onclick="go('view-enseignements','view-bible')"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6s1.5-2 5-2 5 2 5 2v14s-1.5-1-5-1-5 1-5 1V6z"/><path d="M12 6s1.5-2 5-2 5 2 5 2v14s-1.5-1-5-1-5 1-5 1V6z"/><line x1="12" y1="6" x2="12" y2="20"/><line x1="17" y1="4" x2="17" y2="6"/><line x1="15.5" y1="5" x2="18.5" y2="5"/></svg><div class="ni-lbl">Bible</div></div><div class="fab-c"><div class="fab" onclick="toggleFabMenu('enseignements')">+</div></div><div class="ni" onclick="go('view-enseignements','view-books')"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21C12 21 4 15 4 9a4 4 0 0 1 8 0 4 4 0 0 1 8 0c0 6-8 12-8 12z"/><line x1="12" y1="5" x2="12" y2="3"/><line x1="8" y1="6" x2="6.5" y2="4.5"/><line x1="16" y1="6" x2="17.5" y2="4.5"/></svg><div class="ni-lbl">Méditations</div></div><div class="ni" onclick="go('view-enseignements','view-menu')"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><div class="ni-lbl">Menu</div></div></div>
+</div>
+
+<!-- ════ GEN EDITOR ════ -->
+<div class="view hidden gen-editor" id="view-gen-editor">
+  <div class="status-bar" style="background:var(--toolbar)"><div class="s-time" style="color:var(--text)">9:41</div></div>
+  <div class="gen-topbar"><div class="gen-back" id="gen-back-btn"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>Retour</div><div class="gen-badge" id="gen-badge">🌙 Songe</div><div class="gen-ok" onclick="saveGenEntry()">OK</div></div>
+  <div class="gen-title-row"><input class="gen-title-input" id="gen-title-input" type="text" placeholder="Titre…"></div>
+  <div class="gen-meta" id="gen-meta">📅 Aujourd'hui</div>
+  <div class="gen-autosave"><div class="asi-dot" id="gen-asi-dot"></div><div class="asi-lbl" id="gen-asi-lbl">Non sauvegardé</div></div>
+  <div class="gen-sections" id="gen-sections"></div>
+  <div class="gen-save-bar"><div class="gen-save-btn" onclick="saveGenEntry()"><div class="sc-dot"></div><span id="gen-save-lbl">Sauvegarder</span><div class="sc-dot"></div></div></div>
+</div>
+
+<!-- ════ RESSOURCES ════ -->
+<div class="view hidden" id="view-ressources">
+  <div class="status-bar" style="background:var(--royal)"><div class="s-time">9:41</div></div>
+  <div class="res-hero">
+    <div style="display:flex;align-items:center;gap:9px;margin-bottom:4px"><div class="back-btn" onclick="go('view-ressources','view-menu')"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></div><div style="font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);font-weight:700">📚 Ressources</div></div>
+    <div class="page-hero-h1">Librairie & Outils</div>
+  </div>
+  <div class="res-tabs"><div class="res-tab active" id="res-tab-0" onclick="switchResTab(0)">📖 Livres</div><div class="res-tab inactive" id="res-tab-1" onclick="switchResTab(1)">🎙️ Podcasts</div><div class="res-tab inactive" id="res-tab-2" onclick="switchResTab(2)">🛠️ Outils</div></div>
+  <div class="res-search"><span style="font-size:14px">🔍</span><input type="text" placeholder="Rechercher auteur, titre…" oninput="filterResBooks(this.value)"></div>
+  <div class="res-body" id="res-body"></div>
+  <div class="bottom-nav"><div class="ni" onclick="go('view-ressources','view-home')"><svg viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V21a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/></svg><div class="ni-lbl">Accueil</div></div><div class="ni" onclick="go('view-ressources','view-bible')"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6s1.5-2 5-2 5 2 5 2v14s-1.5-1-5-1-5 1-5 1V6z"/><path d="M12 6s1.5-2 5-2 5 2 5 2v14s-1.5-1-5-1-5 1-5 1V6z"/><line x1="12" y1="6" x2="12" y2="20"/><line x1="17" y1="4" x2="17" y2="6"/><line x1="15.5" y1="5" x2="18.5" y2="5"/></svg><div class="ni-lbl">Bible</div></div><div class="fab-c"><div class="fab">+</div></div><div class="ni" onclick="go('view-ressources','view-books')"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21C12 21 4 15 4 9a4 4 0 0 1 8 0 4 4 0 0 1 8 0c0 6-8 12-8 12z"/><line x1="12" y1="5" x2="12" y2="3"/><line x1="8" y1="6" x2="6.5" y2="4.5"/><line x1="16" y1="6" x2="17.5" y2="4.5"/></svg><div class="ni-lbl">Méditations</div></div><div class="ni" onclick="go('view-ressources','view-menu')"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><div class="ni-lbl">Menu</div></div></div>
+</div>
+
+<!-- ════ MENU ════ -->
+<div class="view hidden" id="view-menu">
+  <div class="status-bar" style="background:var(--royal)"><div class="s-time">9:41</div></div>
+  <div class="menu-hero"><div style="display:flex;align-items:center;gap:9px;margin-bottom:4px"><div class="back-btn" onclick="go('view-menu','view-home')"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></div><div class="menu-hero-lbl">✦ Navigation</div></div><div class="menu-hero-h1">Menu</div></div>
+  <div class="menu-body">
+    <div class="menu-sec-lbl">Apparence</div>
+    <div class="dark-row"><div style="font-size:17px">🌙</div><div class="dark-row-label">Mode sombre</div><div class="toggle-sw" id="menu-dark-sw" onclick="toggleDark()"></div></div>
+    <div class="menu-sec-lbl">Mes contenus</div>
+    <div class="menu-item" onclick="go('view-menu','view-songes')"><div class="menu-item-icon bg-5">🌙</div><div class="menu-item-info"><div class="menu-item-name">Songes / Prophéties</div><div class="menu-item-sub">Révélations</div></div><div class="menu-item-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div></div>
+    <div class="menu-item" onclick="go('view-menu','view-culte')"><div class="menu-item-icon bg-2">🎙️</div><div class="menu-item-info"><div class="menu-item-name">Culte / Programme</div><div class="menu-item-sub">Planification</div></div><div class="menu-item-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div></div>
+    <div class="menu-item" onclick="go('view-menu','view-enseignements')"><div class="menu-item-icon bg-3">🎓</div><div class="menu-item-info"><div class="menu-item-name">Mes Enseignements</div><div class="menu-item-sub">Études bibliques</div></div><div class="menu-item-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div></div>
+    <div class="menu-item"><div class="menu-item-icon bg-4">🗂️</div><div class="menu-item-info"><div class="menu-item-name">Historique</div><div class="menu-item-sub">Méditations passées</div></div><div class="menu-item-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div></div>
+    <div class="menu-item" onclick="go('view-menu','view-ressources')"><div class="menu-item-icon bg-1">📚</div><div class="menu-item-info"><div class="menu-item-name">Ressources</div><div class="menu-item-sub">Livres, podcasts, outils</div></div><div class="menu-item-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div></div>
+    <div class="menu-sec-lbl">Compte</div>
+    <div class="menu-item"><div class="menu-item-icon" style="background:linear-gradient(135deg,#1B3A6B,#2A52A0)"><span>☁️</span></div><div class="menu-item-info"><div class="menu-item-name">Sauvegarde Cloud</div><div class="menu-item-sub">Synchroniser</div></div><div class="menu-item-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div></div>
+    <div class="menu-item"><div class="menu-item-icon" style="background:linear-gradient(135deg,#37474F,#607D8B)"><span>⚙️</span></div><div class="menu-item-info"><div class="menu-item-name">Paramètres</div><div class="menu-item-sub">Préférences</div></div><div class="menu-item-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div></div>
+  </div>
+  <div class="bottom-nav"><div class="ni" onclick="go('view-menu','view-home')"><svg viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V21a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/></svg><div class="ni-lbl">Accueil</div></div><div class="ni" onclick="go('view-menu','view-bible')"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6s1.5-2 5-2 5 2 5 2v14s-1.5-1-5-1-5 1-5 1V6z"/><path d="M12 6s1.5-2 5-2 5 2 5 2v14s-1.5-1-5-1-5 1-5 1V6z"/><line x1="12" y1="6" x2="12" y2="20"/><line x1="17" y1="4" x2="17" y2="6"/><line x1="15.5" y1="5" x2="18.5" y2="5"/></svg><div class="ni-lbl">Bible</div></div><div class="fab-c"><div class="fab">+</div></div><div class="ni" onclick="go('view-menu','view-books')"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21C12 21 4 15 4 9a4 4 0 0 1 8 0 4 4 0 0 1 8 0c0 6-8 12-8 12z"/><line x1="12" y1="5" x2="12" y2="3"/><line x1="8" y1="6" x2="6.5" y2="4.5"/><line x1="16" y1="6" x2="17.5" y2="4.5"/></svg><div class="ni-lbl">Méditations</div></div><div class="ni active"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><div class="ni-lbl" style="color:var(--royal-mid)">Menu</div></div></div>
+</div>
+
+<!-- ════ IPHONE NOTES EDITOR ════ -->
+<div class="view hidden" id="view-iphone-note">
+  <div class="status-bar" style="background:#000"><div class="s-time" style="color:white;font-size:14px;font-weight:700">9:41</div><div style="font-size:10px;color:rgba(255,255,255,.6)">●●● 📶 79%</div></div>
+
+  <!-- Top toolbar -->
+  <div class="in-topbar">
+    <div class="in-back" onclick="closeIphoneNote()">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    </div>
+    <div class="in-mid-group">
+      <div class="in-mid-btn" onclick="inUndo()" title="Annuler">
+        <svg viewBox="0 0 24 24"><path d="M3 7h10a6 6 0 0 1 6 6v0a6 6 0 0 1-6 6H7"/><polyline points="7 3 3 7 7 11"/></svg>
+      </div>
+      <div class="in-mid-sep"></div>
+      <div class="in-mid-btn" title="Partager">
+        <svg viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8M16 6l-4-4-4 4M12 2v13"/></svg>
+      </div>
+      <div class="in-mid-sep"></div>
+      <div class="in-mid-btn" title="Plus">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+      </div>
+    </div>
+    <div class="in-done" onclick="saveIphoneNote()">
+      <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+  </div>
+
+  <!-- Compact header: Livre — Chapitre + autosave on same line -->
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 16px 4px;flex-shrink:0;border-bottom:1px solid rgba(255,255,255,.06);background:#000">
+    <div id="in-section-name" style="font-family:-apple-system,sans-serif;font-size:11px;font-weight:700;color:rgba(255,255,255,.85)">Hébreux — Chapitre 13</div>
+    <div style="display:flex;align-items:center;gap:6px">
+      <div class="in-as-dot" id="in-as-dot"></div>
+      <div class="in-as-txt" id="in-as-txt" style="font-size:9px;color:rgba(255,255,255,.35)">Prêt</div>
+    </div>
+  </div>
+
+  <!-- Writing area -->
+  <div class="in-writing">
+    <div id="in-editor" contenteditable="true" spellcheck="true" data-ph="Commence à écrire…"></div>
+  </div>
+
+  <!-- Format toolbar — scrollable pill like image -->
+  <div class="in-format-bar">
+    <div class="in-toolbar-pill">
+      <!-- Aa style -->
+      <div class="in-tb" onmousedown="event.preventDefault()" onclick="inToggleStylePanel()" title="Style">
+        <svg viewBox="0 0 24 24" width="19" height="19" fill="none"><text x="1" y="17" font-size="13" font-weight="600" fill="white" font-family="-apple-system,sans-serif">Aa</text></svg>
+      </div>
+      <!-- Checklist -->
+      <div class="in-tb" onmousedown="event.preventDefault()" onclick="inChecklist()" title="Liste de tâches">
+        <svg viewBox="0 0 24 24" width="19" height="19" stroke="white" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="7" r="2"/><polyline points="4 7 5 8 7 6"/><line x1="10" y1="7" x2="21" y2="7"/><circle cx="5" cy="15" r="2"/><line x1="10" y1="15" x2="21" y2="15"/></svg>
+      </div>
+      <!-- Tableau -->
+      <div class="in-tb" onmousedown="event.preventDefault()" onclick="inTable()" title="Tableau">
+        <svg viewBox="0 0 24 24" width="19" height="19" stroke="white" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg>
+      </div>
+      <!-- Trombone / pièce jointe -->
+      <div class="in-tb" onmousedown="event.preventDefault()" onclick="inHighlight()" title="Surligner">
+        <svg viewBox="0 0 24 24" width="19" height="19" stroke="white" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+      </div>
+      <!-- Couleur texte — "A" avec barre colorée dynamique -->
+      <div class="in-tb" onmousedown="event.preventDefault()" onclick="inToggleColorPanel()" title="Couleur">
+        <svg id="in-color-btn-svg" viewBox="0 0 24 24" width="19" height="19" fill="none">
+          <text x="4" y="16" font-size="13" font-weight="700" fill="white" font-family="-apple-system,sans-serif">A</text>
+          <rect id="in-color-indicator" x="2" y="19" width="20" height="3" rx="1.5" fill="#FFFFFF"/>
+        </svg>
+      </div>
+      <!-- Gras -->
+      <div class="in-tb" id="inf-bold" onmousedown="event.preventDefault()" onclick="inFmt('bold','inf-bold')" title="Gras">
+        <svg viewBox="0 0 24 24" width="19" height="19" fill="none"><text x="5" y="17" font-size="14" font-weight="800" fill="white" font-family="-apple-system,sans-serif">B</text></svg>
+      </div>
+      <!-- Italique -->
+      <div class="in-tb" id="inf-italic" onmousedown="event.preventDefault()" onclick="inFmt('italic','inf-italic')" title="Italique">
+        <svg viewBox="0 0 24 24" width="19" height="19" fill="none"><text x="7" y="17" font-size="14" font-style="italic" fill="white" font-family="-apple-system,sans-serif">I</text></svg>
+      </div>
+      <!-- Souligné -->
+      <div class="in-tb" id="inf-underline" onmousedown="event.preventDefault()" onclick="inFmt('underline','inf-underline')" title="Souligné">
+        <svg viewBox="0 0 24 24" width="19" height="19" fill="none"><text x="6" y="15" font-size="13" text-decoration="underline" fill="white" font-family="-apple-system,sans-serif">U</text><line x1="4" y1="20" x2="20" y2="20" stroke="white" stroke-width="1.5"/></svg>
+      </div>
+      <!-- Barré -->
+      <div class="in-tb" id="inf-strike" onmousedown="event.preventDefault()" onclick="inFmt('strikeThrough','inf-strike')" title="Barré">
+        <svg viewBox="0 0 24 24" width="19" height="19" fill="none"><text x="5" y="17" font-size="13" fill="rgba(255,255,255,.7)" font-family="-apple-system,sans-serif">S</text><line x1="3" y1="12" x2="21" y2="12" stroke="white" stroke-width="1.5"/></svg>
+      </div>
+      <!-- Liste -->
+      <div class="in-tb" onmousedown="event.preventDefault()" onclick="inList()" title="Liste">
+        <svg viewBox="0 0 24 24" width="19" height="19" stroke="white" stroke-width="1.8" fill="none" stroke-linecap="round"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4" cy="6" r="1.2" fill="white" stroke="none"/><circle cx="4" cy="12" r="1.2" fill="white" stroke="none"/><circle cx="4" cy="18" r="1.2" fill="white" stroke="none"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- Text style panel -->
+  <div id="in-style-panel" style="display:none;background:#1C1C1E;border-top:1px solid rgba(255,255,255,.08);padding:10px 14px;flex-shrink:0;flex-direction:column;gap:6px">
+    <div style="font-size:9px;font-weight:800;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:4px">STYLE DE TEXTE</div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap">
+      <div class="in-style-btn" onmousedown="event.preventDefault()" onclick="inApplyStyle('p')">Corps</div>
+      <div class="in-style-btn" onmousedown="event.preventDefault()" onclick="inApplyStyle('h1')"><span style="font-size:14px;font-weight:700">Titre</span></div>
+      <div class="in-style-btn" onmousedown="event.preventDefault()" onclick="inApplyStyle('h2')"><span style="font-size:12px;font-weight:700">Sous-titre</span></div>
+      <div class="in-style-btn" onmousedown="event.preventDefault()" onclick="inApplyStyle('h3')"><span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em">Titre sec.</span></div>
+    </div>
+  </div>
+
+  <!-- Text color panel -->
+  <div id="in-color-panel" style="display:none;background:#1C1C1E;border-top:1px solid rgba(255,255,255,.08);padding:10px 14px;flex-shrink:0;flex-direction:row;align-items:center;gap:10px;flex-wrap:wrap">
+    <div style="font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.35);flex-basis:100%;margin-bottom:2px">COULEUR DU TEXTE</div>
+    <div class="in-color-sw" style="background:white"        onmousedown="event.preventDefault()" onclick="inPickColor('#FFFFFF',this)"></div>
+    <div class="in-color-sw" style="background:#FFD700"     onmousedown="event.preventDefault()" onclick="inPickColor('#FFD700',this)"></div>
+    <div class="in-color-sw" style="background:#FF6B6B"     onmousedown="event.preventDefault()" onclick="inPickColor('#FF6B6B',this)"></div>
+    <div class="in-color-sw" style="background:#4FC3F7"     onmousedown="event.preventDefault()" onclick="inPickColor('#4FC3F7',this)"></div>
+    <div class="in-color-sw" style="background:#81C784"     onmousedown="event.preventDefault()" onclick="inPickColor('#81C784',this)"></div>
+    <div class="in-color-sw" style="background:#CE93D8"     onmousedown="event.preventDefault()" onclick="inPickColor('#CE93D8',this)"></div>
+    <div class="in-color-sw" style="background:#FFB74D"     onmousedown="event.preventDefault()" onclick="inPickColor('#FFB74D',this)"></div>
+    <div class="in-color-sw" style="background:#F48FB1"     onmousedown="event.preventDefault()" onclick="inPickColor('#F48FB1',this)"></div>
+    <div class="in-color-custom">
+      <input type="color" id="in-color-custom-input" value="#FFFFFF" onmousedown="event.stopPropagation()" oninput="inApplyColor(this.value)">
+    </div>
+  </div>
+
+  <!-- Label picker bottom sheet -->
+  <div class="in-label-picker" id="in-label-picker" onclick="event.target===this&&closeInLabelPicker()">
+    <div class="in-lp-sheet">
+      <div class="in-lp-handle"></div>
+      <div class="in-lp-title">Choisir une étiquette</div>
+      <div class="in-lp-grid" id="in-lp-grid"></div>
+      <div class="in-lp-custom">
+        <input class="in-lp-input" id="in-lp-input" type="text" placeholder="Étiquette personnalisée…" maxlength="20">
+        <div class="in-lp-color"><input type="color" id="in-lp-color" value="#D4B45A"></div>
+        <div class="in-lp-add" onclick="addInCustomLabel()">Ajouter</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<input type="file" id="audio-file-input" accept="audio/*" style="display:none" onchange="handleAudioImport(event)">
+</div></div></div>
+
+<script>
+/* ═══ BIBLE BOOKS DATA ═══ */
+const ALL_BOOKS={
+  AT:[
+    {name:'Genèse',ch:50,bg:'bg-1',sub:'Pentateuque'},{name:'Exode',ch:40,bg:'bg-2',sub:'Pentateuque'},{name:'Lévitique',ch:27,bg:'bg-3',sub:'Pentateuque'},{name:'Nombres',ch:36,bg:'bg-4',sub:'Pentateuque'},{name:'Deutéronome',ch:34,bg:'bg-5',sub:'Pentateuque'},
+    {name:'Josué',ch:24,bg:'bg-1',sub:'Historique'},{name:'Juges',ch:21,bg:'bg-2',sub:'Historique'},{name:'Ruth',ch:4,bg:'bg-3',sub:'Historique'},{name:'1 Samuel',ch:31,bg:'bg-4',sub:'Historique'},{name:'2 Samuel',ch:24,bg:'bg-5',sub:'Historique'},{name:'1 Rois',ch:22,bg:'bg-1',sub:'Historique'},{name:'2 Rois',ch:25,bg:'bg-2',sub:'Historique'},{name:'1 Chroniques',ch:29,bg:'bg-3',sub:'Historique'},{name:'2 Chroniques',ch:36,bg:'bg-4',sub:'Historique'},{name:'Esdras',ch:10,bg:'bg-5',sub:'Historique'},{name:'Néhémie',ch:13,bg:'bg-1',sub:'Historique'},{name:'Esther',ch:10,bg:'bg-2',sub:'Historique'},
+    {name:'Job',ch:42,bg:'bg-3',sub:'Poétique'},{name:'Psaumes',ch:150,bg:'bg-4',sub:'Poétique'},{name:'Proverbes',ch:31,bg:'bg-5',sub:'Poétique'},{name:'Ecclésiaste',ch:12,bg:'bg-1',sub:'Poétique'},{name:'Cantique des Cantiques',ch:8,bg:'bg-2',sub:'Poétique'},
+    {name:'Ésaïe',ch:66,bg:'bg-3',sub:'Grands Prophètes'},{name:'Jérémie',ch:52,bg:'bg-4',sub:'Grands Prophètes'},{name:'Lamentations',ch:5,bg:'bg-5',sub:'Grands Prophètes'},{name:'Ézéchiel',ch:48,bg:'bg-1',sub:'Grands Prophètes'},{name:'Daniel',ch:12,bg:'bg-2',sub:'Grands Prophètes'},
+    {name:'Osée',ch:14,bg:'bg-3',sub:'Petits Prophètes'},{name:'Joël',ch:3,bg:'bg-4',sub:'Petits Prophètes'},{name:'Amos',ch:9,bg:'bg-5',sub:'Petits Prophètes'},{name:'Abdias',ch:1,bg:'bg-1',sub:'Petits Prophètes'},{name:'Jonas',ch:4,bg:'bg-2',sub:'Petits Prophètes'},{name:'Michée',ch:7,bg:'bg-3',sub:'Petits Prophètes'},{name:'Nahum',ch:3,bg:'bg-4',sub:'Petits Prophètes'},{name:'Habacuc',ch:3,bg:'bg-5',sub:'Petits Prophètes'},{name:'Sophonie',ch:3,bg:'bg-1',sub:'Petits Prophètes'},{name:'Aggée',ch:2,bg:'bg-2',sub:'Petits Prophètes'},{name:'Zacharie',ch:14,bg:'bg-3',sub:'Petits Prophètes'},{name:'Malachie',ch:4,bg:'bg-4',sub:'Petits Prophètes'},
+  ],
+  NT:[
+    {name:'Matthieu',ch:28,bg:'bg-1',sub:'Évangiles'},{name:'Marc',ch:16,bg:'bg-2',sub:'Évangiles'},{name:'Luc',ch:24,bg:'bg-3',sub:'Évangiles'},{name:'Jean',ch:21,bg:'bg-4',sub:'Évangiles'},
+    {name:'Actes',ch:28,bg:'bg-5',sub:'Histoire'},
+    {name:'Romains',ch:16,bg:'bg-1',sub:'Épîtres de Paul'},{name:'1 Corinthiens',ch:16,bg:'bg-2',sub:'Épîtres de Paul'},{name:'2 Corinthiens',ch:13,bg:'bg-3',sub:'Épîtres de Paul'},{name:'Galates',ch:6,bg:'bg-4',sub:'Épîtres de Paul'},{name:'Éphésiens',ch:6,bg:'bg-5',sub:'Épîtres de Paul'},{name:'Philippiens',ch:4,bg:'bg-1',sub:'Épîtres de Paul'},{name:'Colossiens',ch:4,bg:'bg-2',sub:'Épîtres de Paul'},{name:'1 Thessaloniciens',ch:5,bg:'bg-3',sub:'Épîtres de Paul'},{name:'2 Thessaloniciens',ch:3,bg:'bg-4',sub:'Épîtres de Paul'},{name:'1 Timothée',ch:6,bg:'bg-5',sub:'Épîtres de Paul'},{name:'2 Timothée',ch:4,bg:'bg-1',sub:'Épîtres de Paul'},{name:'Tite',ch:3,bg:'bg-2',sub:'Épîtres de Paul'},{name:'Philémon',ch:1,bg:'bg-3',sub:'Épîtres de Paul'},
+    {name:'Hébreux',ch:13,bg:'bg-4',sub:'Épîtres générales'},{name:'Jacques',ch:5,bg:'bg-5',sub:'Épîtres générales'},{name:'1 Pierre',ch:5,bg:'bg-1',sub:'Épîtres générales'},{name:'2 Pierre',ch:3,bg:'bg-2',sub:'Épîtres générales'},{name:'1 Jean',ch:5,bg:'bg-3',sub:'Épîtres générales'},{name:'2 Jean',ch:1,bg:'bg-4',sub:'Épîtres générales'},{name:'3 Jean',ch:1,bg:'bg-5',sub:'Épîtres générales'},{name:'Jude',ch:1,bg:'bg-1',sub:'Épîtres générales'},
+    {name:'Apocalypse',ch:22,bg:'bg-2',sub:'Prophétique'},
+  ]
+};
+const BIBLE_VERSIONS=[
+  {code:'LSG',name:'Louis Segond 1910',desc:'Version classique française'},
+  {code:'NEG',name:'Nouvelle Édition de Genève',desc:'Version révisée 1979'},
+  {code:'BDS',name:'Bible du Semeur',desc:'Traduction contemporaine'},
+  {code:'NBS',name:'Nouvelle Bible Segond',desc:'Traduction 2002'},
+  {code:'TOB',name:'Traduction Oecuménique',desc:'Version interconfessionnelle'},
+  {code:'KJV',name:'King James Version',desc:'English classical'},
+  {code:'NIV',name:'New International Version',desc:'English modern'},
+];
+const HEBREUX_13=[
+  {n:1,t:"Persévérez dans l'amour fraternel."},
+  {n:2,t:"N'oubliez pas l'hospitalité ; car, en l'exerçant, quelques-uns ont logé des anges, sans le savoir."},
+  {n:3,t:"Souvenez-vous des prisonniers, comme si vous étiez aussi prisonniers ; de ceux qui sont maltraités, comme étant aussi vous-mêmes dans un corps."},
+  {n:4,t:"Que le mariage soit honoré de tous, et le lit conjugal exempt de souillure, car Dieu jugera les impudiques et les adultères."},
+  {n:5,t:"Ne vous livrez pas à l'amour de l'argent ; contentez-vous de ce que vous avez ; car Dieu lui-même a dit : Je ne te délaisserai point, et je ne t'abandonnerai point."},
+  {n:6,t:"C'est donc avec assurance que nous pouvons dire : Le Seigneur est mon aide, je ne craindrai rien ; que me fera l'homme ?"},
+  {n:7,t:"Souvenez-vous de vos conducteurs qui vous ont annoncé la parole de Dieu ; considérez quelle a été la fin de leur vie, et imitez leur foi."},
+  {n:8,t:"Jésus-Christ est le même hier, aujourd'hui, et éternellement."},
+  {n:9,t:"Ne vous laissez pas entraîner par des doctrines diverses et étrangères. Car il est bon que le cœur soit affermi par la grâce."},
+  {n:10,t:"Nous avons un autel dont ceux qui desservent le tabernacle n'ont pas le droit de manger."},
+  {n:15,t:"Par lui, offrons sans cesse à Dieu un sacrifice de louange, c'est-à-dire le fruit de lèvres qui confessent son nom."},
+  {n:20,t:"Que le Dieu de paix, qui a ramené d'entre les morts le grand pasteur des brebis, par le sang d'une alliance éternelle, notre Seigneur Jésus,"},
+  {n:21,t:"vous rende capables de toute bonne œuvre pour l'accomplissement de sa volonté, et fasse en vous ce qui lui est agréable, par Jésus-Christ, auquel soit la gloire aux siècles des siècles ! Amen !"},
+];
+
+/* ═══ NOTEPAD DATA ═══ */
+const MED_SECTIONS=[
+  {key:'comprehension',label:'Compréhension générale',icon:'📖',sub:'Ce que j\'ai compris',colorClass:'ci-gold',defaultLabel:{text:'Compréhension',bg:'#D4B45A',color:'#1B3A6B'}},
+  {key:'revelation',   label:'Révélations',          icon:'✨',sub:'Ce que Dieu me révèle',colorClass:'ci-blue',defaultLabel:{text:'Révélation',bg:'#5BA4C8',color:'white'}},
+  {key:'priere',       label:'Prière / Déclaration', icon:'🙏',sub:'Prière inspirée',colorClass:'ci-green',defaultLabel:{text:'Prière',bg:'#6BB58A',color:'white'}},
+  {key:'versets',      label:'Versets à mémoriser',  icon:'💜',sub:'Versets clés',colorClass:'ci-purple',defaultLabel:{text:'Versets',bg:'#9B7BC8',color:'white'}},
+];
+
+/* Predefined label palette */
+const LABEL_PALETTE=[
+  {text:'🔴 Urgent',bg:'#EF5350',color:'white'},
+  {text:'🟡 Clé',bg:'#D4B45A',color:'#1B3A6B'},
+  {text:'🟢 Promesse',bg:'#4CAF50',color:'white'},
+  {text:'🔵 Prière',bg:'#1976D2',color:'white'},
+  {text:'🟣 Révélation',bg:'#7B1FA2',color:'white'},
+  {text:'⚪ Personnel',bg:'#78909C',color:'white'},
+  {text:'🟠 Obéissance',bg:'#E65100',color:'white'},
+  {text:'🩵 Paix',bg:'#26C6DA',color:'white'},
+];
+
+/* ═══ STATE ═══ */
+let isDark=false,currentTab='AT';
+let currentBook=null,currentChapter=1;
+let savedNotes={};
+let noteLabels={}; // { "Genèse-1-comprehension": {text,bg,color} }
+let sectionEntries={songes:[],culte:[],enseignements:[]};
+let sectionCurrentTab={songes:'songe',culte:'culte',enseignements:'theme-dev'};
+let sectionFabOpen={songes:false,culte:false,enseignements:false};
+let genCtx={section:null,type:null,id:null,backView:null};
+let recordings=[],importedFiles=[];
+let mediaRecorder=null,audioChunks=[],isRecording=false,recInterval=null,recSeconds=0;
+let waveInterval=null,currentAudio=null,currentRecId=null,playInterval=null;
+let bibleCurrentBook='Hébreux',bibleCurrentChapter=13;
+let selectedVersion='LSG',selectedVerse=null,verseHighlights={};
+let expandedBook=null;
+let genAutoTimer=null,resCurrentTab=0;
+let customLabels=[]; // user-added labels
+
+/* ═══ UTILS ═══ */
+function go(from,to){document.getElementById(from).classList.add('slide-out');document.getElementById(to).classList.remove('hidden','slide-out');}
+function toggleDark(){isDark=!isDark;document.documentElement.setAttribute('data-theme',isDark?'dark':'light');document.getElementById('dark-toggle-btn').textContent=isDark?'☀️':'🌙';const sw=document.getElementById('menu-dark-sw');if(sw)isDark?sw.classList.add('on'):sw.classList.remove('on');}
+function editName(){const n=prompt('Ton prénom :',document.getElementById('user-name').textContent);if(n&&n.trim())document.getElementById('user-name').textContent=n.trim();}
+let revIdx=0;
+function revMove(dir){const t=3;revIdx=(revIdx+dir+t)%t;document.getElementById('rev-track').style.transform=`translateX(-${revIdx*100}%)`;document.querySelectorAll('.rev-dot').forEach((d,i)=>d.className='rev-dot'+(i===revIdx?' active':''));document.getElementById('rev-counter').textContent=`${revIdx+1} / ${t}`;}
+
+/* ═══ BIBLE ═══ */
+function renderBiblePassage(){
+  const el=document.getElementById('bible-passage-text');if(!el)return;
+  let html='';
+  HEBREUX_13.forEach(v=>{
+    const hl=verseHighlights[v.n]?` hl-${verseHighlights[v.n]}`:'';
+    html+=`<span class="vnum" onclick="event.stopPropagation();openVCtx(${v.n},event)">${v.n}</span><span class="v-text${hl}" id="vt-${v.n}" onclick="openVCtx(${v.n},event)"> ${v.t} </span>`;
+  });
+  el.innerHTML=html;
+  document.getElementById('bible-book-label').textContent=`${bibleCurrentBook} ${bibleCurrentChapter}`;
+}
+function prevChapter(){if(bibleCurrentChapter>1){bibleCurrentChapter--;document.getElementById('bible-book-label').textContent=`${bibleCurrentBook} ${bibleCurrentChapter}`;document.getElementById('bible-reading').scrollTop=0;}}
+function nextChapter(){bibleCurrentChapter++;document.getElementById('bible-book-label').textContent=`${bibleCurrentBook} ${bibleCurrentChapter}`;document.getElementById('bible-reading').scrollTop=0;}
+
+function bibleSearch(q){
+  if(!q||!q.trim()){renderBiblePassage();return;}
+  const el=document.getElementById('bible-passage-text');if(!el)return;
+  renderBiblePassage();
+  if(q.length<3)return;
+  el.querySelectorAll('.v-text').forEach(s=>{
+    if(s.textContent.toLowerCase().includes(q.toLowerCase())){
+      s.style.background='rgba(212,180,90,.3)';s.style.borderRadius='3px';
+    }
+  });
+}
+
+/* Verse menu */
+function openVCtx(num,e){
+  selectedVerse=num;
+  const menu=document.getElementById('verse-ctx');
+  const readEl=document.getElementById('bible-reading');
+  const rect=readEl.getBoundingClientRect();
+  const top=Math.min(e.clientY-rect.top+readEl.scrollTop,readEl.scrollHeight-180);
+  menu.style.top=top+'px';menu.style.left='10px';menu.style.right='10px';
+  menu.classList.add('show');
+  e.stopPropagation();
+}
+function closeVCtx(){document.getElementById('verse-ctx').classList.remove('show');selectedVerse=null;}
+function hlVerse(color,el){
+  if(!selectedVerse)return;
+  document.querySelectorAll('.vcm-dot').forEach(d=>d.classList.remove('sel'));el.classList.add('sel');
+  if(color==='none')delete verseHighlights[selectedVerse];else verseHighlights[selectedVerse]=color;
+  renderBiblePassage();setTimeout(closeVCtx,300);
+}
+function addFav(){alert(`Verset ${selectedVerse} → Favoris ✤`);closeVCtx();}
+function addRev(){alert(`Verset ${selectedVerse} → Révision 🔄`);closeVCtx();}
+document.addEventListener('click',e=>{
+  const vc=document.getElementById('verse-ctx');if(vc&&vc.classList.contains('show')&&!vc.contains(e.target))closeVCtx();
+  const vm=document.getElementById('version-modal');if(vm&&vm.classList.contains('open')&&!vm.contains(e.target)&&!e.target.closest('.bh-ver-pill'))vm.classList.remove('open');
+});
+
+/* Version modal */
+function openVersionModal(){
+  const modal=document.getElementById('version-modal');
+  document.getElementById('vm-list').innerHTML=BIBLE_VERSIONS.map(v=>`
+    <div class="vm-row${v.code===selectedVersion?' selected':''}" onclick="selectVersion('${v.code}')">
+      <div><div class="vm-name">${v.code} — ${v.name}</div><div class="vm-desc">${v.desc}</div></div>
+      ${v.code===selectedVersion?'<div class="vm-check">✓</div>':''}
+    </div>`).join('');
+  modal.classList.add('open');
+}
+function selectVersion(code){selectedVersion=code;document.getElementById('bible-version-label').textContent=code;document.getElementById('version-modal').classList.remove('open');}
+
+/* Book modal — Strong expand style */
+function openBibleBookModal(){document.getElementById('bible-book-modal').classList.add('open');renderBBM();}
+function closeBibleBookModal(){document.getElementById('bible-book-modal').classList.remove('open');expandedBook=null;}
+
+function renderBBM(){
+  const scroll=document.getElementById('bbm-scroll');
+  const allBooks=[...ALL_BOOKS.AT,...ALL_BOOKS.NT];
+  let html='';
+  allBooks.forEach(b=>{
+    const isActive=b.name===bibleCurrentBook;
+    const isExpanded=expandedBook===b.name;
+    html+=`<div class="bbm-book-row${isExpanded?' expanded':''}" onclick="toggleBBMBook('${b.name}',${b.ch})">
+      <div class="bbm-book-name${isActive?' active':''}">${b.name}</div>
+      <div class="bbm-chev${isExpanded?' up':''}">∨</div>
+    </div>`;
+    if(isExpanded){
+      html+=`<div class="bbm-ch-grid">`;
+      for(let i=1;i<=b.ch;i++){
+        const isCurr=isActive&&i===bibleCurrentChapter;
+        html+=`<div class="bbm-ch-cell${isCurr?' current':''}" onclick="selectBibleBookCh('${b.name}',${i})">${i}</div>`;
+      }
+      html+=`</div>`;
+    }
+  });
+  scroll.innerHTML=html;
+}
+function toggleBBMBook(name,ch){
+  if(expandedBook===name){expandedBook=null;}else{expandedBook=name;}
+  renderBBM();
+  // Scroll to expanded book
+  setTimeout(()=>{
+    const rows=document.querySelectorAll('.bbm-book-row');
+    rows.forEach(r=>{if(r.querySelector('.bbm-book-name').textContent===name)r.scrollIntoView({behavior:'smooth',block:'start'});});
+  },50);
+}
+function selectBibleBookCh(name,ch){
+  bibleCurrentBook=name;bibleCurrentChapter=ch;
+  document.getElementById('bible-book-label').textContent=`${name} ${ch}`;
+  renderBiblePassage();closeBibleBookModal();
+  document.getElementById('bible-reading').scrollTop=0;
+}
+
+/* ═══ BOOKS (méditations) ═══ */
+function renderBooks(data){
+  const el=document.getElementById('books-scroll');
+  if(!data||!data.length){el.innerHTML='<div style="text-align:center;padding:30px;color:var(--text-soft);font-weight:600">Aucun résultat</div>';return;}
+  const groups={};data.forEach(b=>{if(!groups[b.sub])groups[b.sub]=[];groups[b.sub].push(b);});
+  let html='';
+  for(const[g,books] of Object.entries(groups)){
+    html+=`<div class="t-lbl">${g}</div>`;
+    books.forEach(b=>{
+      const initials=b.name.slice(0,2);
+      const bs=JSON.stringify({name:b.name,ch:b.ch,bg:b.bg,sub:b.sub}).replace(/"/g,'&quot;');
+      html+=`<div class="book-card" onclick="openBook(${bs})">
+        <div class="bk-ico ${b.bg}">${initials}</div>
+        <div class="bk-info"><div class="bk-name">${b.name}</div><div class="bk-meta">${b.ch} chapitres</div></div>
+        <div class="bk-right"><div class="bk-badge bnew">Nouveau</div><div class="bk-chev"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div></div>
+      </div>`;
+    });
+  }
+  el.innerHTML=html;
+}
+function switchTab(el,tab){currentTab=tab;document.querySelectorAll('.tab').forEach(t=>{t.className='tab inactive';});el.className='tab active';renderBooks(ALL_BOOKS[tab]);}
+function filterBooks(q){const all=[...ALL_BOOKS.AT,...ALL_BOOKS.NT];if(!q.trim()){renderBooks(ALL_BOOKS[currentTab]);return;}renderBooks(all.filter(b=>b.name.toLowerCase().includes(q.toLowerCase())));}
+function openBook(book){
+  currentBook=book;currentChapter=1;
+  document.getElementById('np-icon').textContent='📖';
+  document.getElementById('np-name').textContent=book.name;
+  document.getElementById('np-sub').textContent=`${book.ch} chapitres`;
+  buildChapters(book.ch);renderNotepad(1);
+  go('view-books','view-notepad');
+}
+function buildChapters(n){
+  const cs=document.getElementById('ch-scroll');let h='';
+  for(let i=1;i<=n;i++){
+    const key=`${currentBook.name}-${i}`;
+    const has=savedNotes[key]&&savedNotes[key]['med_content']&&savedNotes[key]['med_content'].replace(/<[^>]+>/g,'').trim();
+    h+=`<div class="ch-btn${i===1?' active':''}${has?' has-note':''}" id="chb-${i}" onclick="selCh(${i})">${i}</div>`;
+  }
+  cs.innerHTML=h;cs.scrollLeft=0;
+}
+function selCh(n){
+  currentChapter=n;
+  document.querySelectorAll('.ch-btn').forEach(b=>b.classList.remove('active'));
+  const btn=document.getElementById(`chb-${n}`);
+  if(btn){btn.classList.add('active');btn.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});}
+  // Open directly into iPhone Notes editor
+  openMedNote(n);
+}
+
+/* Med notepad template — insert default section headings if empty */
+const MED_TEMPLATE=`<h2 style="color:#E8526A;font-size:8px;text-transform:uppercase;letter-spacing:.05em;font-weight:800;margin-bottom:6px">COMPRÉHENSIONS ET RÉVÉLATIONS</h2><p><br></p><p><br></p><h2 style="color:#E8526A;font-size:8px;text-transform:uppercase;letter-spacing:.05em;font-weight:800;margin:6px 0">PAROLE DE DÉCLARATION</h2><p><br></p><p><br></p><h2 style="color:#E8526A;font-size:8px;text-transform:uppercase;letter-spacing:.05em;font-weight:800;margin:6px 0">VERSET :</h2><p><br></p><p><br></p><h3 style="color:#C8A84B;font-size:6px;text-transform:uppercase;letter-spacing:.07em;font-weight:800;margin:6px 0">THÉMATIQUE RÉVÉLÉE</h3><p><br></p>`;
+
+function openMedNote(ch){
+  inCurrentSKey='med_content';
+  inGenSec=null;
+  const key=`${currentBook.name}-${ch}`;
+  const data=savedNotes[key]||{};
+  const content=data['med_content']||'';
+
+  // Header info
+  const nameEl=document.getElementById('in-section-name');
+  if(nameEl)nameEl.textContent=`${currentBook.name} — Chapitre ${ch}`;
+
+  const editor=document.getElementById('in-editor');
+  if(editor)editor.innerHTML=content;
+  setInSaveState(null,'Prêt');
+  savedSel=null;
+
+  // Style panels closed
+  const sp=document.getElementById('in-style-panel');if(sp)sp.style.display='none';
+  const cp=document.getElementById('in-color-panel');if(cp)cp.style.display='none';
+
+  go('view-notepad','view-iphone-note');
+  setTimeout(()=>{
+    const ed=document.getElementById('in-editor');
+    if(ed){ed.focus();
+      // Place cursor at end
+      try{const r=document.createRange();const s=window.getSelection();r.selectNodeContents(ed);r.collapse(false);s.removeAllRanges();s.addRange(r);}catch(e){}
+    }
+  },380);
+}
+
+/* renderNotepad — shows chapter list only (chapters open directly into notes) */
+function renderNotepad(ch){
+  const key=`${currentBook.name}-${ch}`;const data=savedNotes[key]||{};
+  const today=new Date().toLocaleDateString('fr-FR',{day:'numeric',month:'short',year:'numeric'});
+  const content=data['med_content']||'';
+  const plain=content.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
+  const preview=plain.slice(0,80)+(plain.length>80?'…':'');
+
+  let html=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding:0 2px">
+    <div style="font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:var(--text)">${currentBook.name} — Ch.${ch}</div>
+    <div style="font-size:9px;color:var(--text-soft);background:var(--surface);padding:3px 9px;border-radius:20px;font-weight:600;box-shadow:0 1px 5px var(--shadow)">${today}</div>
+  </div>`;
+
+  if(preview){
+    // Show note preview if content exists
+    html+=`<div style="background:var(--card);border-radius:14px;padding:13px 14px;box-shadow:0 2px 10px var(--shadow);margin-bottom:10px;border-left:4px solid #D4B45A;cursor:pointer" onclick="openMedNote(${ch})">
+      <div style="font-size:11px;font-weight:800;color:var(--text);margin-bottom:6px">📝 Ma méditation</div>
+      <div style="font-size:11px;color:var(--text-soft);line-height:1.5">${preview}</div>
+      <div style="margin-top:8px;font-size:10px;font-weight:700;color:var(--royal)">Appuie pour continuer ✏️</div>
+    </div>`;
+  } else {
+    // Empty state
+    html+=`<div style="background:var(--card);border-radius:14px;padding:20px;text-align:center;box-shadow:0 2px 10px var(--shadow);margin-bottom:10px;cursor:pointer;border:2px dashed var(--border)" onclick="openMedNote(${ch})">
+      <div style="font-size:28px;margin-bottom:8px">✍️</div>
+      <div style="font-size:13px;font-weight:800;color:var(--text);margin-bottom:4px">Commencer la méditation</div>
+      <div style="font-size:11px;color:var(--text-soft)">Appuie pour ouvrir le bloc-note</div>
+    </div>`;
+  }
+
+  // Quick stats
+  html+=`<div style="display:flex;gap:8px;margin-bottom:12px">
+    <div style="flex:1;background:var(--surface);border-radius:11px;padding:10px 12px;box-shadow:0 1px 6px var(--shadow);text-align:center">
+      <div style="font-size:16px;font-weight:900;color:var(--royal)">${Object.keys(savedNotes).filter(k=>k.startsWith(currentBook.name+'-')).length}</div>
+      <div style="font-size:9px;color:var(--text-soft);font-weight:700">Notes</div>
+    </div>
+    <div style="flex:1;background:var(--surface);border-radius:11px;padding:10px 12px;box-shadow:0 1px 6px var(--shadow);text-align:center">
+      <div style="font-size:16px;font-weight:900;color:var(--gold)">${currentBook.ch}</div>
+      <div style="font-size:9px;color:var(--text-soft);font-weight:700">Chapitres</div>
+    </div>
+    <div style="flex:1;background:var(--surface);border-radius:11px;padding:10px 12px;box-shadow:0 1px 6px var(--shadow);text-align:center">
+      <div style="font-size:16px;font-weight:900;color:#4CAF50">${content?'✓':'○'}</div>
+      <div style="font-size:9px;color:var(--text-soft);font-weight:700">Statut</div>
+    </div>
+  </div>`;
+
+  document.getElementById('np-area').innerHTML=html;
+}
+
+/* ═══ IPHONE NOTES EDITOR ═══ */
+let inCurrentSKey=null;
+let inAutoTimer=null;
+
+function openIphoneNote(sKey){
+  // Redirect to openMedNote for all med sections (now single note per chapter)
+  openMedNote(currentChapter);
+}
+
+function closeIphoneNote(){
+  saveIphoneNoteContent();
+  const stylePanel=document.getElementById('in-style-panel');if(stylePanel)stylePanel.style.display='none';
+  const colorPanel=document.getElementById('in-color-panel');if(colorPanel)colorPanel.style.display='none';
+  if(inGenSec){
+    const sec=inGenSec;
+    inGenSec=null;
+    const cfg=SEC_CFG[sec];
+    if(cfg.directNote){
+      renderSecList(sec);
+      go('view-iphone-note',cfg.backView);
+    } else {
+      go('view-iphone-note','view-gen-editor');
+      const entry=sectionEntries[sec].find(x=>x.id===genCtx.id);
+      buildGenContent(cfg,sec,genCtx.type,entry);
+    }
+  } else {
+    renderNotepad(currentChapter);
+    go('view-iphone-note','view-notepad');
+  }
+}
+
+function saveIphoneNote(){
+  saveIphoneNoteContent();
+  setInSaveState('saved','Sauvegardé ✓');
+  setTimeout(()=>closeIphoneNote(),400);
+}
+
+function saveIphoneNoteContent(){
+  const editor=document.getElementById('in-editor');if(!editor)return;
+  const content=editor.innerHTML;
+  if(inGenSec&&genCtx.id){
+    const e=sectionEntries[inGenSec].find(x=>x.id===genCtx.id);
+    if(e){
+      e.content=content;
+      // Auto-set title from first non-empty line if still default
+      if(!e.title||e.title===SEC_CFG[inGenSec]?.badgeMap[e.type]?.label){
+        const plain=content.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
+        if(plain)e.title=plain.slice(0,40);
+      }
+      e.recordings=[...recordings];
+      e.importedFiles=[...importedFiles];
+      // Update header in editor
+      const nameEl=document.getElementById('in-section-name');
+      if(nameEl&&e.title)nameEl.textContent=e.title;
+    }
+  } else if(currentBook){
+    const key=`${currentBook.name}-${currentChapter}`;
+    if(!savedNotes[key])savedNotes[key]={};
+    savedNotes[key]['med_content']=content;
+    const btn=document.getElementById(`chb-${currentChapter}`);
+    if(btn&&content.replace(/<[^>]+>/g,'').trim())btn.classList.add('has-note');
+  }
+}
+
+function setInSaveState(cls,txt){
+  const dot=document.getElementById('in-as-dot');const lbl=document.getElementById('in-as-txt');
+  if(dot)dot.className='in-as-dot'+(cls?' '+cls:'');
+  if(lbl){const now=new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});lbl.textContent=cls==='saved'?`Sauvegardé à ${now}`:cls==='saving'?'Sauvegarde…':'Prêt';}
+}
+
+document.getElementById('in-editor').addEventListener('input',()=>{
+  clearTimeout(inAutoTimer);
+  setInSaveState('saving','Sauvegarde…');
+  inAutoTimer=setTimeout(()=>{saveIphoneNoteContent();setInSaveState('saved','Sauvegardé');},1200);
+});
+
+/* Format commands — save/restore selection so focus works on mobile */
+let savedSel=null;
+function saveSel(){
+  const s=window.getSelection();
+  if(s&&s.rangeCount>0)savedSel=s.getRangeAt(0).cloneRange();
+}
+function restoreSel(){
+  const ed=document.getElementById('in-editor');if(!ed)return;
+  ed.focus();
+  if(savedSel){const s=window.getSelection();s.removeAllRanges();s.addRange(savedSel);}
+}
+function inFmt(cmd,btnId){
+  restoreSel();
+  document.execCommand(cmd,false,null);
+  savedSel=null;
+  const btn=document.getElementById(btnId);
+  if(btn){try{btn.classList.toggle('pressed',document.queryCommandState(cmd));}catch(e){}}
+}
+function inUndo(){restoreSel();document.execCommand('undo',false,null);}
+function inHighlight(){
+  restoreSel();
+  document.execCommand('hiliteColor',false,'rgba(255,215,0,0.40)');
+}
+function inList(){restoreSel();document.execCommand('insertUnorderedList',false,null);}
+function inChecklist(){restoreSel();document.execCommand('insertUnorderedList',false,null);}
+function inTable(){
+  restoreSel();
+  document.execCommand('insertHTML',false,`<table style="border-collapse:collapse;width:100%;margin:8px 0;font-size:9px"><tr><td style="border:1px solid rgba(255,255,255,.2);padding:4px 8px;color:white">&nbsp;</td><td style="border:1px solid rgba(255,255,255,.2);padding:4px 8px;color:white">&nbsp;</td></tr><tr><td style="border:1px solid rgba(255,255,255,.2);padding:4px 8px;color:white">&nbsp;</td><td style="border:1px solid rgba(255,255,255,.2);padding:4px 8px;color:white">&nbsp;</td></tr></table><p><br></p>`);
+}
+
+function inToggleStylePanel(){
+  const sp=document.getElementById('in-style-panel');
+  const cp=document.getElementById('in-color-panel');
+  if(!sp)return;
+  saveSel();
+  const show=sp.style.display==='none'||sp.style.display==='';
+  sp.style.display=show?'flex':'none';
+  if(show&&cp)cp.style.display='none';
+}
+function inToggleColorPanel(){
+  const cp=document.getElementById('in-color-panel');
+  const sp=document.getElementById('in-style-panel');
+  if(!cp)return;
+  saveSel();
+  const show=cp.style.display==='none'||cp.style.display==='';
+  cp.style.display=show?'flex':'none';
+  if(show&&sp)sp.style.display='none';
+}
+function inApplyStyle(tag){
+  restoreSel();
+  document.execCommand('formatBlock',false,tag);
+  const sp=document.getElementById('in-style-panel');if(sp)sp.style.display='none';
+}
+function inPickColor(color,el){
+  restoreSel();
+  document.execCommand('foreColor',false,color);
+  // Update A underbar
+  const ind=document.getElementById('in-color-indicator');
+  if(ind)ind.setAttribute('fill',color);
+  // Mark swatch selected
+  document.querySelectorAll('.in-color-sw').forEach(s=>s.style.outline='none');
+  if(el)el.style.outline='2px solid white';
+  // Close panel
+  const cp=document.getElementById('in-color-panel');
+  if(cp)cp.style.display='none';
+}
+function inApplyColor(color){
+  restoreSel();
+  document.execCommand('foreColor',false,color);
+  const ind=document.getElementById('in-color-indicator');
+  if(ind)ind.setAttribute('fill',color);
+}
+
+document.addEventListener('selectionchange',()=>{
+  const view=document.getElementById('view-iphone-note');
+  if(!view||view.classList.contains('hidden')||view.classList.contains('slide-out'))return;
+  [['bold','inf-bold'],['italic','inf-italic'],['underline','inf-underline'],['strikeThrough','inf-strike']].forEach(([cmd,id])=>{
+    try{const el=document.getElementById(id);if(el)el.classList.toggle('pressed',document.queryCommandState(cmd));}catch(e){}
+  });
+  // Save selection while inside editor
+  const ed=document.getElementById('in-editor');
+  const s=window.getSelection();
+  if(ed&&s&&s.rangeCount>0&&ed.contains(s.anchorNode)){
+    savedSel=s.getRangeAt(0).cloneRange();
+  }
+});
+
+/* Label picker */
+function updateInLabelChip(lbl){
+  const chip=document.getElementById('in-label-chip');
+  if(!chip)return;
+  chip.style.background=lbl.bg;chip.style.color=lbl.color;
+  const txt=chip.childNodes[0];if(txt&&txt.nodeType===3)txt.textContent=lbl.text+' ';
+}
+function openInLabelPicker(){
+  populateInLabelGrid();
+  document.getElementById('in-label-picker').classList.add('show');
+}
+function closeInLabelPicker(){document.getElementById('in-label-picker').classList.remove('show');}
+function populateInLabelGrid(){
+  const grid=document.getElementById('in-lp-grid');if(!grid)return;
+  const all=[...LABEL_PALETTE,...customLabels];
+  const labelKey=inCurrentSKey?`${currentBook?currentBook.name:''}−${currentChapter}−${inCurrentSKey}`:'';
+  const current=noteLabels[labelKey];
+  grid.innerHTML=all.map(l=>`
+    <div class="in-lp-chip${current&&current.text===l.text?' sel':''}" style="background:${l.bg};color:${l.color}" onclick="applyInLabel(${JSON.stringify(l).replace(/"/g,'&quot;')})">${l.text}</div>`).join('');
+}
+function applyInLabel(label){
+  if(!inCurrentSKey||!currentBook)return;
+  const labelKey=`${currentBook.name}-${currentChapter}-${inCurrentSKey}`;
+  noteLabels[labelKey]=label;
+  updateInLabelChip(label);
+  closeInLabelPicker();
+}
+function addInCustomLabel(){
+  const inp=document.getElementById('in-lp-input');const col=document.getElementById('in-lp-color');
+  if(!inp||!col||!inp.value.trim())return;
+  const label={text:inp.value.trim(),bg:col.value,color:'white'};
+  customLabels.push(label);
+  applyInLabel(label);
+  inp.value='';
+}
+function saveMeditation(){
+  const badge=document.getElementById('saved-badge');badge.classList.add('show');
+  const btn=document.getElementById(`chb-${currentChapter}`);if(btn)btn.classList.add('has-note');
+  setTimeout(()=>badge.classList.remove('show'),2200);
+}
+
+/* ═══ GEN SECTIONS — all use directNote (iPhone Notes editor directly) ═══ */
+const SEC_CFG={
+  songes:{
+    tabs:['songe','prophetie'],
+    bodyId:'songes-body',
+    badgeMap:{songe:{label:'🌙 Songe',cls:'badge-songe'},prophetie:{label:'✨ Prophétie',cls:'badge-prophetie'}},
+    cardCls:{songe:'songe',prophetie:'prophetie'},
+    emptyIcons:{songe:'🌙',prophetie:'✨'},
+    emptyText:{songe:'Aucun songe',prophetie:'Aucune prophétie'},
+    hasAudio:true, backView:'view-songes', directNote:true,
+    accentColor:'#6A1B9A',
+  },
+  culte:{
+    tabs:['culte','programme'],
+    bodyId:'culte-body',
+    badgeMap:{culte:{label:'🎶 Culte',cls:'badge-culte'},programme:{label:'📋 Programme',cls:'badge-programme'}},
+    cardCls:{culte:'culte',programme:'programme'},
+    emptyIcons:{culte:'🎶',programme:'📋'},
+    emptyText:{culte:'Aucun culte',programme:'Aucun programme'},
+    hasAudio:true, backView:'view-culte', directNote:true,
+    accentColor:'#0277BD',
+  },
+  enseignements:{
+    tabs:['theme-dev','theme-ins'],
+    bodyId:'enseignements-body',
+    badgeMap:{'theme-dev':{label:'📚 Développé',cls:'badge-theme-dev'},'theme-ins':{label:'💡 Inspiré',cls:'badge-theme-ins'}},
+    cardCls:{'theme-dev':'theme-dev','theme-ins':'theme-ins'},
+    emptyIcons:{'theme-dev':'📚','theme-ins':'💡'},
+    emptyText:{'theme-dev':'Aucun thème développé','theme-ins':'Aucun thème inspiré'},
+    hasAudio:true, backView:'view-enseignements', directNote:true,
+    accentColor:'#6A1B9A',
+  },
+};
+const TAB_IDS={songes:['sp-tab-0','sp-tab-1'],culte:['culte-tab-0','culte-tab-1'],enseignements:['ens-tab-0','ens-tab-1']};
+
+function switchSecTab(sec,idx,type){sectionCurrentTab[sec]=type;TAB_IDS[sec].forEach((id,i)=>{const el=document.getElementById(id);if(el)el.className='sec-tab'+(i===idx?' active':' inactive');});renderSecList(sec);}
+function renderSecList(sec){
+  const cfg=SEC_CFG[sec];const type=sectionCurrentTab[sec];const body=document.getElementById(cfg.bodyId);
+  const filtered=sectionEntries[sec].filter(e=>e.type===type).sort((a,b)=>b.ts-a.ts);
+  if(!filtered.length){body.innerHTML=`<div class="sec-empty"><div class="sec-empty-icon">${cfg.emptyIcons[type]}</div><div class="sec-empty-text">${cfg.emptyText[type]}</div><div class="sec-empty-sub">Appuie sur + pour créer</div></div>`;return;}
+  const groups={};filtered.forEach(e=>{const d=new Date(e.ts).toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});if(!groups[d])groups[d]=[];groups[d].push(e);});
+  let html='';
+  for(const[date,entries] of Object.entries(groups)){
+    html+=`<div class="sec-date-label">${date}</div>`;
+    entries.forEach(e=>{
+      const bm=cfg.badgeMap[e.type];const cc=cfg.cardCls[e.type];const time=new Date(e.ts).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+      let preview='';
+      if(cfg.directNote){
+        if(e.content)preview=e.content.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim().slice(0,70);
+      } else if(e.sections){
+        const vals=Object.values(e.sections).map(v=>v?v.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim():'').filter(v=>v);
+        if(vals.length)preview=vals[0].slice(0,70);
+      }
+      const audioPill=e.recordings&&e.recordings.length?`<div class="sec-audio-pill">🎙️ ${e.recordings.length} audio</div>`:'';
+      html+=`<div class="sec-entry-card ${cc}" onclick="editGenEntry('${sec}','${e.id}')"><div class="sec-entry-header"><div class="sec-entry-badge ${bm.cls}">${bm.label}</div><div class="sec-entry-time">${time}</div></div><div class="sec-entry-title">${e.title||'Sans titre'}</div><div class="sec-entry-preview">${preview||'(vide)'}</div>${audioPill}</div>`;
+    });
+  }
+  body.innerHTML=html;
+}
+
+function toggleFabMenu(sec){const isOpen=sectionFabOpen[sec];Object.keys(sectionFabOpen).forEach(k=>{sectionFabOpen[k]=false;const ov=document.getElementById(`${k}-overlay`);const fb=document.getElementById(`${k}-fab`);if(ov)ov.classList.remove('show');if(fb)fb.innerHTML='<svg viewBox="0 0 24 24" width="22" height="22" stroke="white" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>';});if(!isOpen){sectionFabOpen[sec]=true;document.getElementById(`${sec}-overlay`).classList.add('show');document.getElementById(`${sec}-fab`).innerHTML='<svg viewBox="0 0 24 24" width="22" height="22" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';}}
+function closeFabMenu(sec){sectionFabOpen[sec]=false;document.getElementById(`${sec}-overlay`).classList.remove('show');document.getElementById(`${sec}-fab`).innerHTML='<svg viewBox="0 0 24 24" width="22" height="22" stroke="white" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>';}
+
+function openGenEditor(sec,type){
+  closeFabMenu(sec);
+  const cfg=SEC_CFG[sec];
+  const newId='ge_'+Date.now();
+  const now=new Date();
+
+  if(cfg.directNote){
+    // For all directNote sections: ask for title first, then open note
+    const bm=cfg.badgeMap[type];
+    const defaultTitle=bm.label.replace(/[🌙✨🎶📋📚💡]/g,'').trim();
+    const title=prompt(`Titre — ${defaultTitle} :`,'')||defaultTitle;
+    const entry={id:newId,type,title,content:'',sections:{},recordings:[],importedFiles:[],ts:now.getTime()};
+    sectionEntries[sec].push(entry);
+    genCtx={section:sec,type,id:newId,backView:cfg.backView};
+    recordings=[];importedFiles=[];
+    openDirectNote(sec,type,entry,cfg.backView);
+    return;
+  }
+
+  // Fallback (not used currently)
+  const entry={id:newId,type,title:'',content:'',sections:{},recordings:[],importedFiles:[],ts:now.getTime()};
+  sectionEntries[sec].push(entry);
+  genCtx={section:sec,type,id:newId,backView:cfg.backView};
+  recordings=[];importedFiles=[];
+  document.getElementById('gen-badge').textContent=cfg.badgeMap[type].label;
+  document.getElementById('gen-title-input').value='';
+  document.getElementById('gen-meta').textContent=`📅 ${now.toLocaleDateString('fr-FR',{weekday:'short',day:'numeric',month:'short'})} · ${now.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}`;
+  setDot('gen',null,'Non sauvegardé');document.getElementById('gen-save-lbl').textContent='Sauvegarder';
+  document.getElementById('gen-back-btn').onclick=()=>saveGenEntry();
+  buildGenContent(cfg,sec,type,entry);
+  go(cfg.backView,'view-gen-editor');
+  setTimeout(()=>document.getElementById('gen-title-input').focus(),350);
+}
+
+function editGenEntry(sec,id){
+  const cfg=SEC_CFG[sec];const e=sectionEntries[sec].find(x=>x.id===id);if(!e)return;
+  genCtx={section:sec,type:e.type,id,backView:cfg.backView};recordings=e.recordings||[];importedFiles=e.importedFiles||[];
+
+  if(cfg.directNote){
+    // Songes — go straight to iPhone Notes
+    openDirectSongeNote(sec,e.type,e,cfg.backView);
+    return;
+  }
+
+  document.getElementById('gen-badge').textContent=cfg.badgeMap[e.type].label;
+  document.getElementById('gen-title-input').value=e.title||'';
+  const d=new Date(e.ts);document.getElementById('gen-meta').textContent=`📅 ${d.toLocaleDateString('fr-FR',{weekday:'short',day:'numeric',month:'short'})} · ${d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}`;
+  document.getElementById('gen-save-lbl').textContent='Mettre à jour';setDot('gen','saved','Sauvegardé');
+  document.getElementById('gen-back-btn').onclick=()=>saveGenEntry();
+  buildGenContent(cfg,sec,e.type,e);go(cfg.backView,'view-gen-editor');
+}
+
+/* Open iPhone Notes directly — generic for all directNote sections */
+function openDirectSongeNote(sec,type,entry,backView){
+  openDirectNote(sec,type,entry,backView);
+}
+
+function openDirectNote(sec,type,entry,backView){
+  inCurrentSKey='content';
+  inGenSec=sec;
+
+  const cfg=SEC_CFG[sec];
+  const bm=cfg.badgeMap[type];
+  // Header: entry title if exists, else type label
+  const headerTitle=entry.title?entry.title:bm.label;
+  const nameEl=document.getElementById('in-section-name');
+  if(nameEl)nameEl.textContent=headerTitle;
+
+  const editor=document.getElementById('in-editor');
+  if(editor)editor.innerHTML=entry.content||'';
+  setInSaveState(null,'Prêt');
+  savedSel=null;
+
+  // Close panels
+  const sp=document.getElementById('in-style-panel');if(sp)sp.style.display='none';
+  const cp=document.getElementById('in-color-panel');if(cp)cp.style.display='none';
+
+  go(backView,'view-iphone-note');
+  setTimeout(()=>{const ed=document.getElementById('in-editor');if(ed)ed.focus();},380);
+}
+
+/* buildGenContent — all sections now show notepad cards + audio */
+function buildGenContent(cfg,sec,type,entry){
+  const container=document.getElementById('gen-sections');
+  let html='';
+  const secs=cfg.noteSections||[];
+
+  // Notepad section cards (identical style to méditation)
+  secs.forEach(s=>{
+    const content=entry&&entry.sections&&entry.sections[s.key]?entry.sections[s.key]:'';
+    const plain=content.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
+    const preview=plain.slice(0,65)+(plain.length>65?'…':'');
+    html+=`<div class="ns-card" style="border-left-color:${s.defaultLabel.bg}" onclick="openGenIphoneNote('${sec}','${s.key}')">
+      <div class="ns-card-hdr">
+        <div class="ns-ico ${s.colorClass}">${s.icon}</div>
+        <div class="ns-card-info">
+          <div class="ns-card-title">${s.label}</div>
+        </div>
+        <div class="ns-edit-btn">✏️ Écrire</div>
+      </div>
+      <div class="ns-preview${preview?'':' empty'}">${preview||'Appuie pour rédiger…'}</div>
+    </div>`;
+  });
+
+  // Audio recording section
+  if(cfg.hasAudio){html+=buildAudioHtml();}
+
+  container.innerHTML=html;
+  renderRecordings();renderImportedFiles();
+}
+
+/* Open iPhone Notes editor from gen entry */
+function openGenIphoneNote(sec,sKey){
+  // Ensure entry exists
+  if(!genCtx.id){
+    genCtx.id='ge_'+Date.now();
+    sectionEntries[sec].push({id:genCtx.id,type:genCtx.type,title:document.getElementById('gen-title-input').value.trim()||'',content:'',sections:{},recordings:[...recordings],importedFiles:[...importedFiles],ts:Date.now()});
+  }
+  // Store context for save-back
+  inCurrentSKey=sKey;
+  inGenSec=sec; // new global
+  const entry=sectionEntries[sec].find(x=>x.id===genCtx.id);
+  const content=entry&&entry.sections&&entry.sections[sKey]?entry.sections[sKey]:'';
+  const cfg=SEC_CFG[sec];
+  const s=cfg.noteSections.find(x=>x.key===sKey);
+  const lbl=s.defaultLabel;
+
+  const iconEl=document.getElementById('in-section-icon');
+  if(iconEl){iconEl.textContent=s.icon;iconEl.style.background=s.colorClass==='ci-gold'?'rgba(212,180,90,.15)':s.colorClass==='ci-blue'?'rgba(27,58,107,.1)':s.colorClass==='ci-green'?'rgba(46,125,50,.12)':'rgba(103,58,183,.1)';}
+  const nameEl=document.getElementById('in-section-name');if(nameEl)nameEl.textContent=s.label;
+  const metaEl=document.getElementById('in-section-meta');if(metaEl)metaEl.textContent=document.getElementById('gen-title-input').value||sec;
+  updateInLabelChip(lbl);
+
+  const editor=document.getElementById('in-editor');
+  if(editor)editor.innerHTML=content;
+  setInSaveState(null,'Prêt');
+  savedSel=null;
+
+  go('view-gen-editor','view-iphone-note');
+  setTimeout(()=>{const ed=document.getElementById('in-editor');if(ed)ed.focus();},380);
+}
+
+let inGenSec=null; // track which section we came from
+
+// Override closeIphoneNote to handle both med and gen contexts
+function closeIphoneNote(){
+  saveIphoneNoteContent();
+  const stylePanel=document.getElementById('in-style-panel');if(stylePanel)stylePanel.style.display='none';
+  const colorPanel=document.getElementById('in-color-panel');if(colorPanel)colorPanel.style.display='none';
+  if(inGenSec){
+    const sec=inGenSec;
+    inGenSec=null;
+    const cfg=SEC_CFG[sec];
+    if(cfg.directNote){
+      // Songes — go back to songes list, refresh it
+      renderSecList(sec);
+      go('view-iphone-note',cfg.backView);
+    } else {
+      go('view-iphone-note','view-gen-editor');
+      const entry=sectionEntries[sec].find(x=>x.id===genCtx.id);
+      buildGenContent(cfg,sec,genCtx.type,entry);
+    }
+  } else {
+    go('view-iphone-note','view-notepad');
+    renderNotepad(currentChapter);
+  }
+}
+
+function saveIphoneNote(){
+  saveIphoneNoteContent();
+  setInSaveState('saved','Sauvegardé ✓');
+  setTimeout(()=>closeIphoneNote(),400);
+}
+
+function saveIphoneNoteContent(){
+  const editor=document.getElementById('in-editor');if(!editor)return;
+  const content=editor.innerHTML;
+  if(inGenSec&&genCtx.id){
+    // Save into gen entry
+    const e=sectionEntries[inGenSec].find(x=>x.id===genCtx.id);
+    if(e){
+      if(inCurrentSKey==='content'){
+        // Direct songe mode — save to content field
+        e.content=content;
+        // Use first line as title if title empty
+        if(!e.title){
+          const plain=content.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
+          e.title=plain.slice(0,40)||(e.type==='songe'?'Nouveau songe':'Nouvelle prophétie');
+        }
+      } else {
+        if(!e.sections)e.sections={};
+        e.sections[inCurrentSKey]=content;
+      }
+      e.recordings=[...recordings];
+      e.importedFiles=[...importedFiles];
+    }
+  } else if(inCurrentSKey&&currentBook&&inCurrentSKey!=='content'){
+    const key=`${currentBook.name}-${currentChapter}`;
+    if(!savedNotes[key])savedNotes[key]={};
+    savedNotes[key][inCurrentSKey]=content;
+    const btn=document.getElementById(`chb-${currentChapter}`);
+    if(btn&&content.trim())btn.classList.add('has-note');
+  }
+}
+
+function doSaveGenSilent(){
+  const title=document.getElementById('gen-title-input').value.trim();
+  if(genCtx.id){const e=sectionEntries[genCtx.section].find(x=>x.id===genCtx.id);if(e){e.title=title;e.recordings=[...recordings];e.importedFiles=[...importedFiles];}}
+  else{genCtx.id='ge_'+Date.now();sectionEntries[genCtx.section].push({id:genCtx.id,type:genCtx.type,title,content:'',sections:{},recordings:[...recordings],importedFiles:[...importedFiles],ts:Date.now()});}
+}
+function saveGenEntry(){
+  doSaveGenSilent();
+  renderSecList(genCtx.section);
+  sectionCurrentTab[genCtx.section]=genCtx.type;
+  TAB_IDS[genCtx.section].forEach((id,i)=>{const cfg2=SEC_CFG[genCtx.section];const el=document.getElementById(id);if(el)el.className='sec-tab'+(cfg2.tabs[i]===genCtx.type?' active':' inactive');});
+  go('view-gen-editor',genCtx.backView);
+}
+document.getElementById('gen-title-input').addEventListener('input',()=>{clearTimeout(genAutoTimer);setDot('gen','saving','…');genAutoTimer=setTimeout(()=>{doSaveGenSilent();setDot('gen','saved','Auto-sauvegardé');},1500);});
+
+function setDot(prefix,cls,lbl){const d=document.getElementById(prefix+'-asi-dot');const l=document.getElementById(prefix+'-asi-lbl');if(d)d.className='asi-dot'+(cls?' '+cls:'');if(l)l.textContent=lbl;}
+
+function buildAudioHtml(){return`<div class="audio-section"><div class="audio-section-hdr"><div class="audio-hdr-icon">🎙️</div><div class="audio-hdr-info"><div class="audio-hdr-title">Enregistrement audio</div><div class="audio-hdr-sub">Raconte à voix haute</div></div></div><div class="audio-body"><div class="rec-row"><div class="rec-btn" id="rec-btn" onclick="toggleRecording()"><svg viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 1 3 3v6a3 3 0 0 1-6 0V5a3 3 0 0 1 3-3z" fill="white"/><path d="M19 10v1a7 7 0 0 1-14 0v-1M12 19v4M8 23h8"/></svg><div class="rec-stop-icon"></div></div><div class="rec-info"><div class="rec-status" id="rec-status">Appuie pour enregistrer</div><div class="rec-timer" id="rec-timer">00:00</div></div></div><div class="waveform" id="waveform">${Array(20).fill(0).map((_,i)=>`<div class="wave-bar" id="wb-${i}" style="height:${4+Math.random()*8}px"></div>`).join('')}</div><div class="recordings-list" id="recordings-list"></div><div class="import-audio-btn" onclick="document.getElementById('audio-file-input').click()"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg><span>Importer un fichier audio</span></div><div class="imported-files" id="imported-files-list"></div></div></div>`;}
+
+/* ═══ AUDIO ═══ */
+function toggleRecording(){if(!isRecording){startRecording();}else{stopRecording();}}
+async function startRecording(){try{const stream=await navigator.mediaDevices.getUserMedia({audio:true});mediaRecorder=new MediaRecorder(stream);audioChunks=[];mediaRecorder.ondataavailable=e=>audioChunks.push(e.data);mediaRecorder.onstop=()=>{const blob=new Blob(audioChunks,{type:'audio/webm'});const url=URL.createObjectURL(blob);recordings.push({id:'rec_'+Date.now(),url,dur:recSeconds,name:`Enregistrement ${recordings.length+1}`,playing:false});renderRecordings();stream.getTracks().forEach(t=>t.stop());};mediaRecorder.start();isRecording=true;recSeconds=0;const btn=document.getElementById('rec-btn');if(btn)btn.classList.add('recording');recInterval=setInterval(()=>{recSeconds++;const m=Math.floor(recSeconds/60).toString().padStart(2,'0');const s=(recSeconds%60).toString().padStart(2,'0');const rt=document.getElementById('rec-timer');if(rt)rt.textContent=`${m}:${s}`;},1000);waveInterval=setInterval(()=>{for(let i=0;i<20;i++){const b=document.getElementById(`wb-${i}`);if(b){const h=4+Math.random()*24;b.style.height=h+'px';b.classList.toggle('active',h>14);}}},120);}catch(e){alert('Microphone non accessible.');}}
+function stopRecording(){if(mediaRecorder&&mediaRecorder.state!=='inactive')mediaRecorder.stop();isRecording=false;clearInterval(recInterval);clearInterval(waveInterval);const btn=document.getElementById('rec-btn');if(btn)btn.classList.remove('recording');const rs=document.getElementById('rec-status');if(rs)rs.textContent='Appuie pour enregistrer';const rt=document.getElementById('rec-timer');if(rt)rt.textContent='00:00';}
+function renderRecordings(){const list=document.getElementById('recordings-list');if(!list)return;if(!recordings.length){list.innerHTML='';return;}list.innerHTML=recordings.map(r=>{const m=Math.floor(r.dur/60).toString().padStart(2,'0');const s=(r.dur%60).toString().padStart(2,'0');return`<div class="rec-item"><div class="rec-play-btn" onclick="togglePlay('${r.id}')"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" fill="white"/></svg></div><div class="rec-item-info"><div class="rec-item-name">${r.name}</div><div class="rec-item-dur">${m}:${s}</div></div><div class="rec-ww"><div class="rec-ww-fill" id="rwf-${r.id}"></div></div><div class="rec-del" onclick="deleteRec('${r.id}')">✕</div></div>`;}).join('');}
+function togglePlay(id){const rec=recordings.find(r=>r.id===id);if(!rec||!rec.url)return;if(currentAudio&&currentRecId===id){currentAudio.pause();currentAudio=null;currentRecId=null;clearInterval(playInterval);return;}if(currentAudio){currentAudio.pause();clearInterval(playInterval);}const audio=new Audio(rec.url);currentAudio=audio;currentRecId=id;audio.play();playInterval=setInterval(()=>{if(audio.ended){currentAudio=null;clearInterval(playInterval);}},200);}
+function deleteRec(id){const idx=recordings.findIndex(r=>r.id===id);if(idx>-1)recordings.splice(idx,1);renderRecordings();}
+function handleAudioImport(event){Array.from(event.target.files).forEach(f=>{importedFiles.push({id:'imp_'+Date.now()+Math.random(),name:f.name,url:URL.createObjectURL(f),size:(f.size/1024).toFixed(0)+'KB'});});renderImportedFiles();event.target.value='';}
+function renderImportedFiles(){const list=document.getElementById('imported-files-list');if(!list)return;if(!importedFiles.length){list.innerHTML='';return;}list.innerHTML=importedFiles.map(f=>`<div class="imported-file"><div class="if-icon">🎵</div><div class="if-name">${f.name}</div><div style="font-size:8px;color:var(--text-soft);flex-shrink:0">${f.size}</div><div class="if-del" onclick="deleteImport('${f.id}')">✕</div></div>`).join('');}
+function deleteImport(id){const idx=importedFiles.findIndex(f=>f.id===id);if(idx>-1)importedFiles.splice(idx,1);renderImportedFiles();}
+
+/* ═══ RESOURCES ═══ */
+const RESOURCE_BOOKS=[
+  {author:'John Piper',color:'#E53935',books:[{title:'Ne gaspillez pas votre vie',tags:['Vocation','Foi'],price:'12.99€',cover:'bg-4'},{title:'Jouir de Dieu',tags:['Spiritualité'],price:'Gratuit',cover:'bg-1'},{title:'Goûtez et voyez',tags:['Dévotion'],price:'9.99€',cover:'bg-3'}]},
+  {author:'C.S. Lewis',color:'#1565C0',books:[{title:'Le Problème de la douleur',tags:['Théologie'],price:'8.99€',cover:'bg-2'},{title:'Tactique du diable',tags:['Guerre spirituelle'],price:'7.99€',cover:'bg-5'},{title:'Les Quatre Amours',tags:['Relations'],price:'Gratuit',cover:'bg-1'}]},
+  {author:'Rick Warren',color:'#2E7D32',books:[{title:'Une vie motivée par l\'essentiel',tags:['Purpose'],price:'14.99€',cover:'bg-3'},{title:'Pasteur en temps de crise',tags:['Leadership'],price:'11.99€',cover:'bg-4'}]},
+  {author:'T.D. Jakes',color:'#6A1B9A',books:[{title:'Instinct',tags:['Leadership'],price:'12.99€',cover:'bg-5'},{title:'Woman Thou Art Loosed',tags:['Guérison'],price:'9.99€',cover:'bg-2'}]},
+  {author:'Joyce Meyer',color:'#E65100',books:[{title:'Champ de bataille de l\'esprit',tags:['Victoire'],price:'11.99€',cover:'bg-1'},{title:'La puissance de la parole',tags:['Foi'],price:'Gratuit',cover:'bg-3'}]},
+];
+const COVER_GRADS={'bg-1':'linear-gradient(135deg,#1B3A6B,#2A52A0)','bg-2':'linear-gradient(135deg,#B8860B,#D4B45A)','bg-3':'linear-gradient(135deg,#1B5E20,#2E7D32)','bg-4':'linear-gradient(135deg,#B71C1C,#E53935)','bg-5':'linear-gradient(135deg,#4A148C,#7B1FA2)'};
+
+function switchResTab(idx){resCurrentTab=idx;[0,1,2].forEach(i=>{const el=document.getElementById(`res-tab-${i}`);if(el)el.className='res-tab'+(i===idx?' active':' inactive');});renderResources();}
+function filterResBooks(q){renderResources(q);}
+function renderResources(q=''){
+  const body=document.getElementById('res-body');if(!body)return;
+  if(resCurrentTab!==0){body.innerHTML=`<div class="sec-empty"><div class="sec-empty-icon">${resCurrentTab===1?'🎙️':'🛠️'}</div><div class="sec-empty-text">Bientôt disponible</div></div>`;return;}
+  let html='';
+  RESOURCE_BOOKS.forEach(a=>{
+    const filtered=q?a.books.filter(b=>b.title.toLowerCase().includes(q.toLowerCase())||a.author.toLowerCase().includes(q.toLowerCase())):a.books;
+    if(!filtered.length)return;
+    const initials=a.author.split(' ').map(w=>w[0]).join('').slice(0,2);
+    html+=`<div class="author-group"><div class="author-header"><div class="author-avatar" style="background:${a.color}">${initials}</div><div class="author-name">${a.author}</div><div class="author-count">${filtered.length} livre${filtered.length>1?'s':''}</div></div><div class="author-books">`;
+    filtered.forEach(book=>{
+      const isFree=book.price==='Gratuit';
+      html+=`<div class="book-item">
+        <div class="book-cover" style="background:${COVER_GRADS[book.cover]||COVER_GRADS['bg-1']}"><span>📖</span></div>
+        <div class="book-info">
+          <div class="book-title">${book.title}</div>
+          <div class="book-author-tag">par ${a.author}</div>
+          <div class="book-price-row"><div class="book-price${isFree?' free':''}">${book.price}</div><div class="buy-btn">${isFree?'Télécharger':'Acheter'}</div></div>
+        </div>
+      </div>`;
+    });
+    html+=`</div></div>`;
+  });
+  body.innerHTML=html||'<div class="sec-empty"><div class="sec-empty-text">Aucun résultat</div></div>';
+}
+
+/* ═══ RÉVISION ═══ */
+let rvVerses=[
+  {id:'rv1',ref:'Philippiens 4:13',text:'Je puis tout par celui qui me fortifie.',ver:'LSG',interval:1,status:'late'},
+  {id:'rv2',ref:'Psaume 23:1',text:"L'Éternel est mon berger : je ne manquerai de rien.",ver:'LSG',interval:3,status:'today'},
+  {id:'rv3',ref:'Romains 8:1',text:"Il n'y a donc aucune condamnation pour ceux qui sont en Jésus-Christ.",ver:'LSG',interval:7,status:'upcoming'},
+];
+let rvSelectedVer='LSG',rvExVerse=null,rvFilter=null;
+
+function revSwitchTab(tab){
+  ['list','ex'].forEach(t=>{
+    const panel=document.getElementById('rev-panel-'+t);
+    const btn=document.getElementById('rtab-'+t);
+    if(panel)panel.classList.toggle('hidden',t!==tab);
+    if(btn)btn.classList.toggle('active',t===tab);
+  });
+  if(tab==='list')rvRenderList();
+}
+
+function rvOpenAdd(){
+  document.getElementById('rv-add-modal').style.display='flex';
+}
+function rvCloseAdd(){
+  document.getElementById('rv-add-modal').style.display='none';
+}
+
+function rvUpdateStats(){
+  document.getElementById('rev-count-late').textContent=rvVerses.filter(v=>v.status==='late').length;
+  document.getElementById('rev-count-today').textContent=rvVerses.filter(v=>v.status==='today').length;
+  document.getElementById('rev-count-upcoming').textContent=rvVerses.filter(v=>v.status==='upcoming').length;
+  // Update home carousel counter too
+  const hc=document.getElementById('rev-counter');
+  if(hc)hc.textContent=rvVerses.filter(v=>v.status==='today'||v.status==='late').length+' à réviser';
+}
+
+function revSetFilter(f){
+  rvFilter=rvFilter===f?null:f;
+  ['late','today','upcoming'].forEach(s=>{
+    const p=document.getElementById('rev-pill-'+s);
+    if(p)p.style.outline=rvFilter===s?'2px solid white':'none';
+  });
+  revSwitchTab('list');
+}
+
+function rvRenderList(){
+  rvUpdateStats();
+  const el=document.getElementById('rev-verse-list');if(!el)return;
+  const order=['late','today','upcoming'];
+  const labels={late:'🔴 En retard',today:'📅 Aujourd\'hui',upcoming:'🟢 À venir'};
+  const rightColor={late:'#EF5350',today:'#FFD60A',upcoming:'#30D158'};
+  const list=rvFilter?rvVerses.filter(v=>v.status===rvFilter&&v.status!=='done'):rvVerses.filter(v=>v.status!=='done');
+  if(!list.length){el.innerHTML='<div style="text-align:center;padding:40px 20px"><div style="font-size:36px;margin-bottom:10px">🎉</div><div style="font-size:13px;font-weight:700;color:var(--text-soft)">Tous les versets sont maîtrisés !</div></div>';return;}
+  let html='';
+  order.forEach(status=>{
+    const group=list.filter(v=>v.status===status);if(!group.length)return;
+    html+=`<div style="font-size:9px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--text-soft);margin:12px 0 7px;display:flex;align-items:center;gap:8px">${labels[status]}<div style="flex:1;height:1px;background:var(--border)"></div></div>`;
+    group.forEach(v=>{
+      const rc=rightColor[status];
+      html+=`<div class="rv-verse-card" style="border-left-color:${rc}"><div style="flex:1;min-width:0"><div style="font-size:11px;font-weight:800;color:var(--royal);margin-bottom:2px">${v.ref} <span style="font-size:9px;color:var(--text-soft);font-weight:600">${v.ver}</span></div><div style="font-size:11px;color:var(--text);line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${v.text}</div></div><div style="display:flex;align-items:center;gap:5px;flex-shrink:0"><div onclick="rvQuickStart('${v.id}')" style="font-size:9px;font-weight:800;color:white;background:${rc};padding:4px 9px;border-radius:20px;cursor:pointer">▶</div><div onclick="rvDelete('${v.id}')" style="font-size:13px;color:var(--text-faint);cursor:pointer;padding:2px 3px">✕</div></div><div style="position:absolute;right:0;top:0;bottom:0;width:4px;background:${rc};border-radius:0 13px 13px 0"></div></div>`;
+    });
+  });
+  el.innerHTML=html;
+}
+
+function rvSelVer(el,ver){rvSelectedVer=ver;document.querySelectorAll('.rv-ver').forEach(p=>p.classList.remove('active'));el.classList.add('active');}
+
+function rvAddVerse(){
+  const ref=document.getElementById('rv-ref').value.trim();
+  const text=document.getElementById('rv-text').value.trim();
+  if(!ref||!text){alert('Remplis la référence et le texte.');return;}
+  rvVerses.push({id:'rv'+Date.now(),ref,text,ver:rvSelectedVer,interval:1,status:'today'});
+  document.getElementById('rv-ref').value='';
+  document.getElementById('rv-text').value='';
+  rvCloseAdd();
+  revSwitchTab('list');
+}
+
+function rvDelete(id){rvVerses=rvVerses.filter(v=>v.id!==id);rvRenderList();}
+
+function rvOpenPick(){
+  if(!rvVerses.length){alert('Ajoute d\'abord des versets.');return;}
+  const list=document.getElementById('rv-pick-list');
+  list.innerHTML=rvVerses.map(v=>`
+    <div onclick="rvSelectVerse('${v.id}')" style="background:var(--bg);border-radius:10px;padding:10px 12px;cursor:pointer;border:1.5px solid var(--border);margin-bottom:6px">
+      <div style="font-size:11px;font-weight:800;color:var(--royal)">${v.ref}</div>
+      <div style="font-size:10px;color:var(--text-soft);margin-top:2px">${v.text.slice(0,55)}…</div>
+    </div>`).join('');
+  document.getElementById('rv-pick-modal').style.display='flex';
+}
+let rvPendingExType=null;
+function rvSelectVerse(id){
+  rvExVerse=rvVerses.find(v=>v.id===id);
+  document.getElementById('rv-pick-modal').style.display='none';
+  const lbl=document.getElementById('rv-ex-pick-lbl');
+  if(lbl){lbl.textContent=rvExVerse.ref+' ('+rvExVerse.ver+')';lbl.style.color='var(--text)';lbl.style.fontWeight='800';}
+  if(rvPendingExType){const t=rvPendingExType;rvPendingExType=null;setTimeout(()=>{go('view-revision','view-exercise');rvBuildEx(t,rvExVerse);},200);}
+}
+document.addEventListener('click',e=>{
+  const m=document.getElementById('rv-pick-modal');
+  if(m&&m.style.display==='flex'&&e.target===m)m.style.display='none';
+  const a=document.getElementById('rv-add-modal');
+  if(a&&a.style.display==='flex'&&e.target===a)a.style.display='none';
+});
+
+function rvQuickStart(id){
+  rvExVerse=rvVerses.find(v=>v.id===id);
+  revSwitchTab('ex');
+  const lbl=document.getElementById('rv-ex-pick-lbl');
+  if(lbl&&rvExVerse){lbl.textContent=rvExVerse.ref+' ('+rvExVerse.ver+')';lbl.style.color='var(--text)';lbl.style.fontWeight='800';}
+}
+
+function rvStartEx(type){
+  if(!rvExVerse){rvPendingExType=type;rvOpenPick();return;}
+  go('view-revision','view-exercise');
+  rvBuildEx(type,rvExVerse);
+}
+
+function rvBuildEx(type,v){
+  const titles={flashcard:'🃏 Flashcard',blanks:'✏️ Mots manquants',rewrite:'📝 Recopier',read:'👁️ Lecture'};
+  document.getElementById('rv-ex-title').textContent=titles[type];
+  document.getElementById('rv-ex-ref').textContent=v.ref;
+  const body=document.getElementById('rv-ex-body');
+
+  if(type==='flashcard'){
+    body.innerHTML=`
+      <div style="font-size:11px;color:rgba(255,255,255,.4);text-align:center;margin-bottom:14px">Appuie sur la carte pour révéler</div>
+      <div class="rv-flip-card" onclick="this.querySelector('.rv-flip-inner').classList.toggle('flipped')">
+        <div class="rv-flip-inner">
+          <div class="rv-flip-face">
+            <div style="font-size:24px;margin-bottom:10px">📖</div>
+            <div style="font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:white;text-align:center">${v.ref}</div>
+            <div style="font-size:10px;color:rgba(255,255,255,.35);margin-top:8px">Touche pour voir le verset</div>
+          </div>
+          <div class="rv-flip-face rv-flip-back">
+            <div style="font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--gold);margin-bottom:10px">${v.ref}</div>
+            <div style="font-size:15px;color:rgba(255,255,255,.92);line-height:1.65;text-align:center">${v.text}</div>
+          </div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="rv-ex-btn rv-ex-wrong" onclick="rvMark('${v.id}',false)">😓 À revoir</div>
+        <div class="rv-ex-btn rv-ex-correct" onclick="rvMark('${v.id}',true)">✅ Je savais</div>
+      </div>`;
+  }
+  else if(type==='blanks'){
+    const words=v.text.split(' ');
+    const masked=words.map((w,i)=>({word:w,hidden:i%3===1}));
+    const display=masked.map((m,i)=>m.hidden
+      ?`<input id="bl-${i}" type="text" style="display:inline-block;width:${Math.max(48,m.word.length*10)}px;border:none;border-bottom:2px solid rgba(255,255,255,.4);background:transparent;color:white;font-size:14px;text-align:center;outline:none;margin:0 3px;padding:2px 4px" placeholder="…">`
+      :`<span style="font-size:14px;color:rgba(255,255,255,.88)">${m.word}</span>`
+    ).join(' ');
+    body.innerHTML=`
+      <div style="font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--gold);margin-bottom:12px">${v.ref}</div>
+      <div style="background:#1A2845;border-radius:14px;padding:18px;line-height:2.4;margin-bottom:16px">${display}</div>
+      <div class="rv-ex-btn" style="background:linear-gradient(135deg,var(--royal),var(--royal-mid));color:white" onclick="rvCheckBlanks(${JSON.stringify(masked).replace(/"/g,'&quot;')})">Vérifier</div>
+      <div id="rv-blanks-res" style="text-align:center;font-size:13px;font-weight:800;margin-top:12px;min-height:20px"></div>`;
+  }
+  else if(type==='rewrite'){
+    body.innerHTML=`
+      <div style="background:#1A2845;border-radius:14px;padding:16px;margin-bottom:14px">
+        <div style="font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--gold);margin-bottom:8px">${v.ref}</div>
+        <div style="font-size:14px;color:rgba(255,255,255,.9);line-height:1.65">${v.text}</div>
+      </div>
+      <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.4);margin-bottom:8px">Recopie le verset de mémoire</div>
+      <textarea class="rv-ex-input" id="rv-rewrite-inp" placeholder="Écris ici…"></textarea>
+      <div class="rv-ex-btn" style="background:linear-gradient(135deg,var(--royal),var(--royal-mid));color:white" onclick="rvCheckRewrite('${v.id}',${JSON.stringify(v.text).replace(/"/g,'&quot;')})">Vérifier</div>
+      <div id="rv-rewrite-res" style="font-size:12px;line-height:1.5;margin-top:12px;min-height:20px"></div>`;
+  }
+  else if(type==='read'){
+    body.innerHTML=`
+      <div style="background:#1A2845;border-radius:18px;padding:24px;margin-bottom:16px">
+        <div style="font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--gold);margin-bottom:12px;text-align:center">${v.ref}</div>
+        <div style="font-size:16px;color:rgba(255,255,255,.92);line-height:1.75;text-align:center">${v.text}</div>
+      </div>
+      <div style="font-size:12px;color:rgba(255,255,255,.4);text-align:center;margin-bottom:16px">Lis à voix haute, puis valide ton niveau</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="rv-ex-btn rv-ex-wrong" onclick="rvMark('${v.id}',false)">😓 À revoir</div>
+        <div class="rv-ex-btn rv-ex-correct" onclick="rvMark('${v.id}',true)">✅ Mémorisé</div>
+      </div>`;
+  }
+}
+
+function rvCheckBlanks(masked){
+  let ok=0,total=0;
+  masked.forEach((m,i)=>{
+    if(!m.hidden)return;total++;
+    const inp=document.getElementById('bl-'+i);if(!inp)return;
+    const correct=inp.value.trim().toLowerCase()===m.word.toLowerCase().replace(/[.,;:!?«»]/g,'');
+    inp.style.borderBottomColor=correct?'#30D158':'#FF375F';
+    inp.style.color=correct?'#30D158':'#FF375F';
+    if(correct)ok++;
+  });
+  const r=document.getElementById('rv-blanks-res');
+  if(r)r.innerHTML=`<span style="color:${ok===total?'#30D158':'#FFD60A'}">${ok}/${total} correct${ok===total?' 🎉':' — continue !'}</span>`;
+  if(ok===total)setTimeout(()=>rvMark(rvExVerse.id,true),700);
+}
+function rvCheckRewrite(id,original){
+  const inp=document.getElementById('rv-rewrite-inp');if(!inp)return;
+  const typed=inp.value.trim().toLowerCase().replace(/[.,;:!?«»]/g,'');
+  const orig=original.toLowerCase().replace(/[.,;:!?«»]/g,'');
+  const w1=orig.split(/\s+/),w2=typed.split(/\s+/);
+  let ok=0;w1.forEach(w=>{if(w2.includes(w))ok++;});
+  const pct=Math.round(ok/w1.length*100);
+  const r=document.getElementById('rv-rewrite-res');
+  if(r)r.innerHTML=`<span style="color:${pct>=80?'#30D158':'#FFD60A'}">${pct}% de correspondance ${pct>=80?'🎉 Excellent !':'— continue de pratiquer'}</span>`;
+  if(pct>=80)setTimeout(()=>rvMark(id,true),700);
+}
+function rvMark(id,success){
+  const v=rvVerses.find(x=>x.id===id);if(!v)return;
+  if(success){v.interval=Math.min(v.interval*2,30);v.status=v.interval>=14?'done':'upcoming';}
+  else{v.interval=1;v.status='today';}
+  rvUpdateStats();
+  setTimeout(()=>{go('view-exercise','view-revision');revSwitchTab('list');},600);
+}
+
+/* ═══ INIT ═══ */
+renderBooks(ALL_BOOKS.AT);
+renderBiblePassage();
+renderSecList('songes');renderSecList('culte');renderSecList('enseignements');
+renderResources();
+sectionEntries.songes.push({id:'sp1',type:'songe',title:'Vision de la montagne',content:'Une grande montagne blanche…',sections:{},recordings:[],importedFiles:[],ts:Date.now()-86400000});
+sectionEntries.culte.push({id:'c1',type:'culte',title:'Culte du 7 avril',content:'',sections:{theme:'La grâce abondante'},recordings:[],importedFiles:[],ts:Date.now()-86400000});
+renderSecList('songes');renderSecList('culte');
+rvUpdateStats();
+rvRenderList();
+</script>
+</body>
+</html>
